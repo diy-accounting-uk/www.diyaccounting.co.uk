@@ -1,5 +1,7 @@
 # Claude Code Memory - DIY Accounting Gateway
 
+> **Shared conventions** (git workflow, AWS accounts, code quality, confirm behavior, security): See `../CLAUDE.md`
+
 ## Context Survival (CRITICAL — read this first after every compaction)
 
 **After compaction or at session start:**
@@ -33,35 +35,9 @@ This repository manages the **gateway AWS account** (283165661847) for www.diyac
 
 **What this repo does NOT have**: Lambda, DynamoDB, Cognito, API Gateway, Docker, ngrok, HMRC, Stripe, Route53, or any application code. DNS records are managed by the root repo.
 
-## Account Structure
-
-```
-AWS Organization Root (887764105431) ── Management
-├── gateway ─────────── 283165661847 ── Workloads OU  ← THIS ACCOUNT
-├── spreadsheets ────── 064390746177 ── Workloads OU
-├── submit-ci ──────── 367191799875 ── Workloads OU
-├── submit-prod ────── 972912397388 ── Workloads OU
-└── submit-backup ──── 914216784828 ── Backup OU
-```
-
-## AWS Accounts and Repositories
-
-| Account           | ID           | Repository                            | Purpose                               |
-| ----------------- | ------------ | ------------------------------------- | ------------------------------------- |
-| Management (root) | 887764105431 | `antonycc/root.diyaccounting.co.uk`   | Route53, holding page                 |
-| gateway           | 283165661847 | `antonycc/www.diyaccounting.co.uk`    | **This repo** — Gateway static site   |
-| spreadsheets      | 064390746177 | `antonycc/diy-accounting` (future)    | Spreadsheets static site              |
-| submit-ci         | 367191799875 | `antonycc/submit.diyaccounting.co.uk` | Submit CI deployments                 |
-| submit-prod       | 972912397388 | `antonycc/submit.diyaccounting.co.uk` | Submit prod deployments               |
-| submit-backup     | 914216784828 | —                                     | Cross-account backup vault            |
-
 ## Git Workflow
 
-**You may**: create branches, commit changes, push branches, open pull requests
-
-**You may NOT**: merge PRs, push to main, delete branches, rewrite history
-
-**Branch naming**: `claude/<short-description>`
+See `../CLAUDE.md` for full rules. Branch naming: `claude/<short-description>`.
 
 ## Build Commands
 
@@ -167,25 +143,17 @@ aws --profile gateway cloudfront list-distributions
 
 **Read-only AWS operations are always permitted.** Ask before any write operations.
 
-## AWS Write Operations (CRITICAL)
+## AWS Write Operations
 
-**ALWAYS ask before writing to AWS.** Any mutating operation (create, update, delete) requires explicit user approval.
+See `../CLAUDE.md` — always ask before any mutating AWS operation.
 
-## Confirm Means Stop and Wait (CRITICAL)
+## Confirm Means Stop and Wait
 
-When the user says "confirm each command" or similar:
-
-1. **Present the command** in a code block.
-2. **STOP. Do not execute.** Wait for the user to explicitly approve.
-3. Only after the user says "yes", "go ahead", "run it", or similar, execute that single command.
-4. Then present the next command and **STOP again**.
+See `../CLAUDE.md` — present the command, STOP, wait for explicit approval before executing.
 
 ## Code Quality Rules
 
-- **No unnecessary formatting** — don't reformat lines you're not changing
-- **No import reordering** — considered unnecessary formatting
-- **No backwards-compatible aliases** — update all callers consistently
-- Only run `./mvnw spotless:apply` when specifically asked
+See `../CLAUDE.md` for shared rules. Gateway-specific: only run `./mvnw spotless:apply` when specifically asked.
 
 ## Template Repository
 
@@ -198,6 +166,4 @@ This repo is designed as the **simplest CDK static site template**. See `TEMPLAT
 
 ## Security Checklist
 
-- Never commit secrets — use AWS Secrets Manager ARNs
-- Check IAM for least privilege (avoid `Resource: "*"`)
-- OIDC trust policies scoped to specific repository
+See `../CLAUDE.md` for shared rules. Gateway-specific: OIDC trust policies scoped to this specific repository.
