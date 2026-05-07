@@ -118,10 +118,10 @@ public class GatewayStack extends Stack {
 
         // Apply cost allocation tags
         Tags.of(this).add("Environment", props.envName());
-        Tags.of(this).add("Application", "@antonycc/www.diyaccounting.co.uk/gateway");
-        Tags.of(this).add("CostCenter", "@antonycc/www.diyaccounting.co.uk");
-        Tags.of(this).add("Owner", "@antonycc/www.diyaccounting.co.uk");
-        Tags.of(this).add("Project", "@antonycc/www.diyaccounting.co.uk");
+        Tags.of(this).add("Application", "@support-at-diyaccounting/www.diyaccounting.co.uk/gateway");
+        Tags.of(this).add("CostCenter", "@support-at-diyaccounting/www.diyaccounting.co.uk");
+        Tags.of(this).add("Owner", "@support-at-diyaccounting/www.diyaccounting.co.uk");
+        Tags.of(this).add("Project", "@support-at-diyaccounting/www.diyaccounting.co.uk");
         Tags.of(this).add("Stack", "GatewayStack");
         Tags.of(this).add("ManagedBy", "aws-cdk");
         Tags.of(this).add("BillingPurpose", "gateway-static-site");

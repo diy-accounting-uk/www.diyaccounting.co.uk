@@ -6,7 +6,7 @@ Gateway static site for [DIY Accounting](https://www.diyaccounting.co.uk) — th
 
 - **AWS CDK** (Java) deploys an S3 + CloudFront static site with OAC
 - **CloudFront Function** handles URL redirects (generated from `redirects.toml`)
-- **DNS** is managed separately by the [root.diyaccounting.co.uk](https://github.com/antonycc/root.diyaccounting.co.uk) repository
+- **DNS** is managed separately by the [root.diyaccounting.co.uk](https://github.com/support-at-diyaccounting/root.diyaccounting.co.uk) repository
 - **Account**: gateway (`283165661847`) in the DIY Accounting AWS Organization
 
 ## Quick Start
@@ -69,8 +69,8 @@ This repo can be used as a GitHub template for new CDK static sites. See [TEMPLA
 
 | Repository | Purpose |
 |-----------|---------|
-| [root.diyaccounting.co.uk](https://github.com/antonycc/root.diyaccounting.co.uk) | Route53 DNS records |
-| [submit.diyaccounting.co.uk](https://github.com/antonycc/submit.diyaccounting.co.uk) | Submit application |
+| [root.diyaccounting.co.uk](https://github.com/support-at-diyaccounting/root.diyaccounting.co.uk) | Route53 DNS records |
+| [submit.diyaccounting.co.uk](https://github.com/support-at-diyaccounting/submit.diyaccounting.co.uk) | Submit application |
 
 ## License
 

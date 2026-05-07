@@ -108,10 +108,10 @@ for file in $(find "$PROJECT_ROOT" -type f \( \
   -not -path "*/.git/*" \
   -not -name "template-clean.sh" \
   -not -name "template-init.sh"); do
-    sedi 's|@antonycc/www-diyaccounting-co-uk|@owner/www-site-example|g' "$file"
-    sedi 's|@antonycc/www\.site\.example|@owner/www.site.example|g' "$file"
-    sedi 's|antonycc/www\.site\.example|owner/www.site.example|g' "$file"
-    sedi 's|antonycc|owner|g' "$file"
+    sedi 's|@support-at-diyaccounting/www-diyaccounting-co-uk|@owner/www-site-example|g' "$file"
+    sedi 's|@support-at-diyaccounting/www\.site\.example|@owner/www.site.example|g' "$file"
+    sedi 's|support-at-diyaccounting/www\.site\.example|owner/www.site.example|g' "$file"
+    sedi 's|support-at-diyaccounting|owner|g' "$file"
 done
 echo "  GitHub scope replaced"
 

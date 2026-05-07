@@ -21,7 +21,7 @@ Before you begin, you need:
 Click "Use this template" in GitHub, or:
 
 ```bash
-gh repo create myorg/www.mysite.example --template antonycc/www.diyaccounting.co.uk --private
+gh repo create myorg/www.mysite.example --template support-at-diyaccounting/www.diyaccounting.co.uk --private
 git clone git@github.com:myorg/www.mysite.example.git
 cd www.mysite.example
 ```
