@@ -132,7 +132,7 @@ jobs:
     name: 'behaviour test (local)'
     runs-on: ubuntu-24.04
     container:
-      image: mcr.microsoft.com/playwright:v1.58.1-jammy
+      image: mcr.microsoft.com/playwright:v1.59.1-jammy
     steps:
 
       - name: Checkout
