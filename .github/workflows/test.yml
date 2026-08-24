@@ -59,7 +59,10 @@ jobs:
           cache: 'npm'
 
       - name: Node dependencies
-        run: npm ci
+        run: timeout 120 npm ci --prefer-offline || { sleep 30; timeout 180 npm ci; }
+        timeout-minutes: 6
+        env:
+          NPM_CONFIG_FETCH_RETRIES: "3"
 
       - name: Check formatting (JS/YAML/JSON)
         run: npx prettier --check .
@@ -93,7 +96,10 @@ jobs:
           cache: 'npm'
 
       - name: Node dependencies
-        run: npm ci
+        run: timeout 120 npm ci --prefer-offline || { sleep 30; timeout 180 npm ci; }
+        timeout-minutes: 6
+        env:
+          NPM_CONFIG_FETCH_RETRIES: "3"
 
       - name: Run unit tests
         run: npm run test:unit
@@ -112,7 +118,10 @@ jobs:
           cache: 'npm'
 
       - name: Node dependencies
-        run: npm ci
+        run: timeout 120 npm ci --prefer-offline || { sleep 30; timeout 180 npm ci; }
+        timeout-minutes: 6
+        env:
+          NPM_CONFIG_FETCH_RETRIES: "3"
 
       - name: Install Playwright browsers
         run: npx playwright install chromium --with-deps
