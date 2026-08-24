@@ -73,7 +73,7 @@
     "eslint-plugin-security": "^4.0.0",
     "http-server": "^14.1.1",
     "lighthouse": "^13.3.0",
-    "npm-check-updates": "^22.1.1",
+    "npm-check-updates": "^23.0.2",
     "pa11y": "^9.1.1",
     "prettier": "^3.8.3",
     "retire": "^5.4.2",
