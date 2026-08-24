@@ -69,7 +69,7 @@
     "@mhlabs/cfn-diagram": "^1.1.40",
     "@playwright/test": "^1.62.1",
     "aws-cdk": "^2.1138.0",
-    "eslint": "^10.3.0",
+    "eslint": "^10.8.1",
     "eslint-plugin-security": "^4.0.1",
     "http-server": "^14.1.1",
     "lighthouse": "^13.3.0",
