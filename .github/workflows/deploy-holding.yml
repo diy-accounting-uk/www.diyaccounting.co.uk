@@ -1,0 +1,378 @@
+name: deploy holding
+run-name: "deploy holding from ${{ github.ref_name }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        type: choice
+        description: 'Where to point the gateway domains'
+        required: true
+        options:
+          - 'holding'
+          - 'restore'
+        default: 'holding'
+      environment-name:
+        type: choice
+        description: 'Environment name (auto = derive from branch)'
+        required: false
+        options:
+          - '(auto)'
+          - 'ci'
+          - 'prod'
+        default: '(auto)'
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: 'us-east-1'
+
+jobs:
+
+  params:
+    runs-on: ubuntu-24.04
+    permissions: {}
+    steps:
+      - name: "github.event_name=[${{ github.event_name }}]"
+        run: ":"
+      - name: "github.ref=[${{ github.ref }}]"
+        run: ":"
+      - name: "inputs.target=[${{ inputs.target }}]"
+        run: ":"
+      - name: "inputs.environment-name=[${{ inputs.environment-name }}]"
+        run: ":"
+      - name: Normalise Params
+        id: normalise
+        shell: bash
+        run: |
+          X='${{ inputs.target }}'; echo "target=${X:-holding}" | tee -a "$GITHUB_OUTPUT"
+          # Convert '(auto)' to empty string for downstream processing
+          ENV_NAME='${{ inputs.environment-name }}'; [[ "$ENV_NAME" == "(auto)" ]] && ENV_NAME=""
+          # Resolve GitHub Actions environment from explicit input or branch
+          GH_ENV="${ENV_NAME}"
+          if [ -z "$GH_ENV" ]; then
+            if [ "${{ github.ref }}" == "refs/heads/main" ]; then GH_ENV="prod"; else GH_ENV="ci"; fi
+          fi
+          echo "github-environment=${GH_ENV}" | tee -a "$GITHUB_OUTPUT"
+          echo "environment-name=${GH_ENV}" | tee -a "$GITHUB_OUTPUT"
+          ENV_NAME="${GH_ENV}"
+          if [ "$ENV_NAME" = "prod" ]; then
+            HOLDING_DOMAIN="holding.diyaccounting.co.uk"
+            LIVE_DOMAINS="diyaccounting.co.uk www.diyaccounting.co.uk prod-gateway.diyaccounting.co.uk"
+          else
+            HOLDING_DOMAIN="ci-holding.diyaccounting.co.uk"
+            LIVE_DOMAINS="ci-gateway.diyaccounting.co.uk"
+          fi
+          echo "holding-domain=${HOLDING_DOMAIN}" | tee -a "$GITHUB_OUTPUT"
+          echo "live-domains=${LIVE_DOMAINS}" | tee -a "$GITHUB_OUTPUT"
+    outputs:
+      target: ${{ steps.normalise.outputs.target }}
+      environment-name: ${{ steps.normalise.outputs.environment-name }}
+      github-environment: ${{ steps.normalise.outputs.github-environment }}
+      holding-domain: ${{ steps.normalise.outputs.holding-domain }}
+      live-domains: ${{ steps.normalise.outputs.live-domains }}
+
+  # Strips the live aliases from whichever CloudFront distribution currently carries them.
+  # target: holding  -> that is the gateway distribution (gateway account).
+  # target: restore   -> that is the holding distribution (management account).
+  # This must run, and complete, before claim-aliases: a CloudFront alternate domain name can
+  # only ever be attached to one distribution at a time, account boundary or not, so the account
+  # that is giving up the alias has to let go of it before the other account can claim it.
+  release-aliases:
+    name: 'release live aliases from current origin'
+    needs: [params]
+    runs-on: ubuntu-24.04
+    environment: ${{ needs.params.outputs.github-environment }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+
+      - name: Configure AWS role via GitHub OIDC (gateway account)
+        if: ${{ needs.params.outputs.target == 'holding' }}
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.GATEWAY_ACTIONS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-chaining: false
+          audience: sts.amazonaws.com
+          role-skip-session-tagging: true
+          output-credentials: true
+          retry-max-attempts: 3
+
+      - name: Assume AWS deployment role (gateway account)
+        if: ${{ needs.params.outputs.target == 'holding' }}
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.GATEWAY_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-chaining: true
+          audience: sts.amazonaws.com
+          role-skip-session-tagging: true
+          output-credentials: true
+          retry-max-attempts: 3
+
+      - name: Strip live aliases from the gateway distribution
+        if: ${{ needs.params.outputs.target == 'holding' }}
+        env:
+          ENVIRONMENT_NAME: ${{ needs.params.outputs.environment-name }}
+        run: |
+          set -euo pipefail
+          DIST_ID=$(aws cloudformation describe-stacks \
+            --stack-name "${ENVIRONMENT_NAME}-gateway-GatewayStack" \
+            --query 'Stacks[0].Outputs[?OutputKey==`DistributionId`].OutputValue' --output text)
+          ETAG=$(aws cloudfront get-distribution-config --id "$DIST_ID" --query 'ETag' --output text)
+          aws cloudfront get-distribution-config --id "$DIST_ID" --query 'DistributionConfig' \
+            --output json > /tmp/cf-config.json
+          jq '.Aliases = {Quantity: 0, Items: []}' /tmp/cf-config.json > /tmp/cf-config.updated.json
+          aws cloudfront update-distribution --id "$DIST_ID" --if-match "$ETAG" \
+            --distribution-config file:///tmp/cf-config.updated.json
+          aws cloudfront wait distribution-deployed --id "$DIST_ID"
+          echo "Stripped live aliases from gateway distribution $DIST_ID"
+
+      - name: Configure AWS role via GitHub OIDC (management account)
+        if: ${{ needs.params.outputs.target == 'restore' }}
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.ROOT_ACTIONS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-chaining: false
+          audience: sts.amazonaws.com
+          role-skip-session-tagging: true
+          output-credentials: true
+          retry-max-attempts: 3
+
+      - name: Assume AWS deployment role (management account)
+        if: ${{ needs.params.outputs.target == 'restore' }}
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.ROOT_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-chaining: true
+          audience: sts.amazonaws.com
+          role-skip-session-tagging: true
+          output-credentials: true
+          retry-max-attempts: 3
+
+      - name: Strip live aliases from the holding distribution
+        if: ${{ needs.params.outputs.target == 'restore' }}
+        env:
+          HOLDING_DOMAIN: ${{ needs.params.outputs.holding-domain }}
+        run: |
+          set -euo pipefail
+          CLOUDFRONT_DISTRIBUTION_ARN=$(aws resourcegroupstaggingapi get-resources \
+            --resource-type-filters cloudfront:distribution \
+            --region us-east-1 \
+            --tag-filters Key=OriginFor,Values="${HOLDING_DOMAIN}" \
+            --query 'ResourceTagMappingList[0].ResourceARN' --output text)
+          if [ -z "$CLOUDFRONT_DISTRIBUTION_ARN" ] || [ "$CLOUDFRONT_DISTRIBUTION_ARN" = "None" ]; then
+            echo "ERROR: No CloudFront distribution found with tag OriginFor=${HOLDING_DOMAIN}" >&2
+            exit 1
+          fi
+          DIST_ID="${CLOUDFRONT_DISTRIBUTION_ARN##*/}"
+          ETAG=$(aws cloudfront get-distribution-config --id "$DIST_ID" --query 'ETag' --output text)
+          aws cloudfront get-distribution-config --id "$DIST_ID" --query 'DistributionConfig' \
+            --output json > /tmp/cf-config.json
+          jq --arg holding "${HOLDING_DOMAIN}" \
+            '.Aliases = {Quantity: 1, Items: [$holding]}' /tmp/cf-config.json > /tmp/cf-config.updated.json
+          aws cloudfront update-distribution --id "$DIST_ID" --if-match "$ETAG" \
+            --distribution-config file:///tmp/cf-config.updated.json
+          aws cloudfront wait distribution-deployed --id "$DIST_ID"
+          echo "Stripped live aliases from holding distribution $DIST_ID"
+
+  # Claims the live aliases on the new origin, then repoints Route53.
+  # target: holding  -> claim on the holding distribution (management account), point Route53 at
+  #                      the holding domain name (an alias to another record in the same zone).
+  # target: restore   -> claim back on the gateway distribution (gateway account), point Route53
+  #                      at the gateway distribution's own domain name (an alias to a CloudFront
+  #                      distribution, which AWS always resolves through the fixed CloudFront
+  #                      alias hosted zone Z2FDTNDATAQYW2, not our own hosted zone id).
+  claim-aliases:
+    name: 'claim live aliases on new origin'
+    needs: [params, release-aliases]
+    runs-on: ubuntu-24.04
+    environment: ${{ needs.params.outputs.github-environment }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+
+      - name: Configure AWS role via GitHub OIDC (management account)
+        if: ${{ needs.params.outputs.target == 'holding' }}
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.ROOT_ACTIONS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-chaining: false
+          audience: sts.amazonaws.com
+          role-skip-session-tagging: true
+          output-credentials: true
+          retry-max-attempts: 3
+
+      - name: Assume AWS deployment role (management account)
+        if: ${{ needs.params.outputs.target == 'holding' }}
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.ROOT_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-chaining: true
+          audience: sts.amazonaws.com
+          role-skip-session-tagging: true
+          output-credentials: true
+          retry-max-attempts: 3
+
+      - name: Claim live aliases on the holding distribution
+        if: ${{ needs.params.outputs.target == 'holding' }}
+        env:
+          HOLDING_DOMAIN: ${{ needs.params.outputs.holding-domain }}
+          LIVE_DOMAINS: ${{ needs.params.outputs.live-domains }}
+        run: |
+          set -euo pipefail
+          CLOUDFRONT_DISTRIBUTION_ARN=$(aws resourcegroupstaggingapi get-resources \
+            --resource-type-filters cloudfront:distribution \
+            --region us-east-1 \
+            --tag-filters Key=OriginFor,Values="${HOLDING_DOMAIN}" \
+            --query 'ResourceTagMappingList[0].ResourceARN' --output text)
+          if [ -z "$CLOUDFRONT_DISTRIBUTION_ARN" ] || [ "$CLOUDFRONT_DISTRIBUTION_ARN" = "None" ]; then
+            echo "ERROR: No CloudFront distribution found with tag OriginFor=${HOLDING_DOMAIN}" >&2
+            exit 1
+          fi
+          DIST_ID="${CLOUDFRONT_DISTRIBUTION_ARN##*/}"
+          ETAG=$(aws cloudfront get-distribution-config --id "$DIST_ID" --query 'ETag' --output text)
+          aws cloudfront get-distribution-config --id "$DIST_ID" --query 'DistributionConfig' \
+            --output json > /tmp/cf-config.json
+          ALIASES_JSON=$(jq -n --arg holding "${HOLDING_DOMAIN}" --arg lives "${LIVE_DOMAINS}" \
+            '[$holding] + ($lives | split(" "))')
+          jq --argjson aliases "${ALIASES_JSON}" \
+            '.Aliases = {Quantity: ($aliases | length), Items: $aliases}' /tmp/cf-config.json > /tmp/cf-config.updated.json
+          aws cloudfront update-distribution --id "$DIST_ID" --if-match "$ETAG" \
+            --distribution-config file:///tmp/cf-config.updated.json
+          aws cloudfront wait distribution-deployed --id "$DIST_ID"
+          echo "Claimed live aliases on holding distribution $DIST_ID"
+
+      - name: Point live domains at the holding distribution
+        if: ${{ needs.params.outputs.target == 'holding' }}
+        env:
+          HOLDING_DOMAIN: ${{ needs.params.outputs.holding-domain }}
+          LIVE_DOMAINS: ${{ needs.params.outputs.live-domains }}
+          HOSTED_ZONE_ID: ${{ vars.ROOT_HOSTED_ZONE_ID }}
+        run: |
+          set -euo pipefail
+          CHANGES=$(jq -n --arg holding "${HOLDING_DOMAIN}" --arg lives "${LIVE_DOMAINS}" --arg zoneId "${HOSTED_ZONE_ID}" '
+            ($lives | split(" ")) as $domains |
+            [ $domains[] | . as $d | [
+              {Action:"UPSERT", ResourceRecordSet:{Name:($d+"."), Type:"A", AliasTarget:{HostedZoneId:$zoneId, DNSName:($holding+"."), EvaluateTargetHealth:false}}},
+              {Action:"UPSERT", ResourceRecordSet:{Name:($d+"."), Type:"AAAA", AliasTarget:{HostedZoneId:$zoneId, DNSName:($holding+"."), EvaluateTargetHealth:false}}}
+            ] ] | flatten
+          ')
+          aws route53 change-resource-record-sets \
+            --hosted-zone-id "${HOSTED_ZONE_ID}" \
+            --change-batch "$(jq -n --argjson c "$CHANGES" '{Comment:"Point live domains at the holding distribution", Changes:$c}')"
+
+      - name: Configure AWS role via GitHub OIDC (gateway account)
+        if: ${{ needs.params.outputs.target == 'restore' }}
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.GATEWAY_ACTIONS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-chaining: false
+          audience: sts.amazonaws.com
+          role-skip-session-tagging: true
+          output-credentials: true
+          retry-max-attempts: 3
+
+      - name: Assume AWS deployment role (gateway account)
+        if: ${{ needs.params.outputs.target == 'restore' }}
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.GATEWAY_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-chaining: true
+          audience: sts.amazonaws.com
+          role-skip-session-tagging: true
+          output-credentials: true
+          retry-max-attempts: 3
+
+      - name: Claim live aliases back on the gateway distribution
+        id: claim-gateway
+        if: ${{ needs.params.outputs.target == 'restore' }}
+        env:
+          ENVIRONMENT_NAME: ${{ needs.params.outputs.environment-name }}
+          LIVE_DOMAINS: ${{ needs.params.outputs.live-domains }}
+        run: |
+          set -euo pipefail
+          DIST_ID=$(aws cloudformation describe-stacks \
+            --stack-name "${ENVIRONMENT_NAME}-gateway-GatewayStack" \
+            --query 'Stacks[0].Outputs[?OutputKey==`DistributionId`].OutputValue' --output text)
+          GATEWAY_DOMAIN_NAME=$(aws cloudformation describe-stacks \
+            --stack-name "${ENVIRONMENT_NAME}-gateway-GatewayStack" \
+            --query 'Stacks[0].Outputs[?OutputKey==`DistributionDomainName`].OutputValue' --output text)
+          ETAG=$(aws cloudfront get-distribution-config --id "$DIST_ID" --query 'ETag' --output text)
+          aws cloudfront get-distribution-config --id "$DIST_ID" --query 'DistributionConfig' \
+            --output json > /tmp/cf-config.json
+          ALIASES_JSON=$(jq -n --arg lives "${LIVE_DOMAINS}" '$lives | split(" ")')
+          jq --argjson aliases "${ALIASES_JSON}" \
+            '.Aliases = {Quantity: ($aliases | length), Items: $aliases}' /tmp/cf-config.json > /tmp/cf-config.updated.json
+          aws cloudfront update-distribution --id "$DIST_ID" --if-match "$ETAG" \
+            --distribution-config file:///tmp/cf-config.updated.json
+          aws cloudfront wait distribution-deployed --id "$DIST_ID"
+          echo "gateway-domain-name=${GATEWAY_DOMAIN_NAME}" | tee -a "$GITHUB_OUTPUT"
+          echo "Claimed live aliases back on gateway distribution $DIST_ID"
+
+      - name: Configure AWS role via GitHub OIDC (management account)
+        if: ${{ needs.params.outputs.target == 'restore' }}
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.ROOT_ACTIONS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-chaining: false
+          audience: sts.amazonaws.com
+          role-skip-session-tagging: true
+          output-credentials: true
+          retry-max-attempts: 3
+
+      - name: Assume AWS deployment role (management account)
+        if: ${{ needs.params.outputs.target == 'restore' }}
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.ROOT_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-chaining: true
+          audience: sts.amazonaws.com
+          role-skip-session-tagging: true
+          output-credentials: true
+          retry-max-attempts: 3
+
+      - name: Point live domains back at the gateway distribution
+        if: ${{ needs.params.outputs.target == 'restore' }}
+        env:
+          LIVE_DOMAINS: ${{ needs.params.outputs.live-domains }}
+          GATEWAY_DOMAIN_NAME: ${{ steps.claim-gateway.outputs.gateway-domain-name }}
+          HOSTED_ZONE_ID: ${{ vars.ROOT_HOSTED_ZONE_ID }}
+        run: |
+          set -euo pipefail
+          # Z2FDTNDATAQYW2 is AWS's fixed hosted zone id for aliasing to any CloudFront
+          # distribution; it is not one of our own hosted zone ids.
+          CHANGES=$(jq -n --arg gateway "${GATEWAY_DOMAIN_NAME}" --arg lives "${LIVE_DOMAINS}" '
+            ($lives | split(" ")) as $domains |
+            [ $domains[] | . as $d | [
+              {Action:"UPSERT", ResourceRecordSet:{Name:($d+"."), Type:"A", AliasTarget:{HostedZoneId:"Z2FDTNDATAQYW2", DNSName:($gateway+"."), EvaluateTargetHealth:false}}},
+              {Action:"UPSERT", ResourceRecordSet:{Name:($d+"."), Type:"AAAA", AliasTarget:{HostedZoneId:"Z2FDTNDATAQYW2", DNSName:($gateway+"."), EvaluateTargetHealth:false}}}
+            ] ] | flatten
+          ')
+          aws route53 change-resource-record-sets \
+            --hosted-zone-id "${HOSTED_ZONE_ID}" \
+            --change-batch "$(jq -n --argjson c "$CHANGES" '{Comment:"Point live domains back at the gateway distribution", Changes:$c}')"
+
+      - name: Summary
+        run: |
+          echo "## Deploy Holding Result" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Setting | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Target | \`${{ needs.params.outputs.target }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Environment | \`${{ needs.params.outputs.environment-name }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Holding domain | \`${{ needs.params.outputs.holding-domain }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Live domains | \`${{ needs.params.outputs.live-domains }}\` |" >> "$GITHUB_STEP_SUMMARY"
