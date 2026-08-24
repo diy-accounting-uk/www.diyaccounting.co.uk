@@ -45,6 +45,15 @@ env:
 
 jobs:
 
+  playwright-version:
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: v
+        run: echo "version=$(node -p "require('./package-lock.json').packages['node_modules/playwright'].version")" >> "$GITHUB_OUTPUT"
+
   build:
     runs-on: ubuntu-24.04
     steps:
@@ -140,8 +149,10 @@ jobs:
   behaviour-test:
     name: 'behaviour test (local)'
     runs-on: ubuntu-24.04
+    needs:
+      - playwright-version
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-jammy
+      image: mcr.microsoft.com/playwright:v${{ needs.playwright-version.outputs.version }}-jammy
     steps:
 
       - name: Checkout
