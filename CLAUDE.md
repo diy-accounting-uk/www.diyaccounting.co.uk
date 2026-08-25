@@ -67,7 +67,6 @@ npm run update-to-minor        # Update npm dependencies (minor versions)
 npm run update-to-latest       # Update npm dependencies (latest non-alpha)
 npm run update:java            # Update Maven dependencies to latest versions
 npm run update:node            # Update npm dependencies to latest non-alpha versions
-npm run diagram:gateway        # Generate draw.io architecture diagram from CDK synth output
 npm run resources:gateway      # Generate AWS_RESOURCES.md from live AWS data (requires SSO auth)
 ```
 

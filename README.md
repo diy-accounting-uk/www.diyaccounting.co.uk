@@ -57,7 +57,6 @@ OIDC authentication with `gateway-github-actions-role` and `gateway-deployment-r
 |---------|---------|
 | `npm run formatting` | Check Prettier + Spotless formatting |
 | `npm run lint:workflows` | Validate GitHub Actions workflows |
-| `npm run diagram:gateway` | Generate architecture diagram |
 | `npm run resources:gateway` | Generate AWS resource catalogue |
 | `npm run update:java` | Update Maven dependencies |
 | `npm run update:node` | Update npm dependencies |
