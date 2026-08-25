@@ -87,6 +87,7 @@
     "basic-ftp": ">=5.2.0",
     "html-encoding-sniffer": "^6.0.0",
     "encoding-sniffer": "^1.0.2",
-    "cheerio": "^1.2.0"
+    "cheerio": "^1.2.0",
+    "babel-polyfill": "npm:core-js@^3.50.0"
   }
 }
