@@ -5,6 +5,7 @@
   "description": "Gateway static site for diyaccounting.co.uk",
   "private": true,
   "scripts": {
+    "postinstall": "patch-package",
     "start": "npx http-server web/www.diyaccounting.co.uk/public -p 3000",
     "build": "./mvnw clean verify",
     "cdk:synth": "cd cdk-gateway && npx cdk synth --require-approval never --ci true --strict --validation && cd ..",
@@ -60,13 +61,10 @@
     "update-to-latest": "npx npm-check-updates --upgrade --enginesNode --verbose --install always",
     "update:java": "./scripts/update-java.sh",
     "update:node": "npm run update-to-latest",
-    "diagram:gateway": "npm run cdk:synth && bash -c 'for f in cdk-gateway.out/*.template.json; do npx @mhlabs/cfn-diagram draw.io -c -s -t \"$f\" -o \"cdk-gateway-$(basename $f .template.json).drawio\"; done' && for f in cdk-gateway-*.drawio; do node scripts/clean-drawio.cjs \"$f\"; done",
-    "diagram:gateway:svg": "npm run diagram:gateway && bash -c 'for f in cdk-gateway-*.drawio; do drawio --export --format svg --output \"${f%.drawio}.svg\" \"$f\"; done'",
     "resources:gateway": "node scripts/generate-aws-resources.js --profile gateway"
   },
   "devDependencies": {
     "@axe-core/cli": "^4.13.0",
-    "@mhlabs/cfn-diagram": "^1.1.40",
     "@playwright/test": "^1.62.1",
     "aws-cdk": "^2.1138.0",
     "eslint": "^10.8.1",
@@ -75,6 +73,7 @@
     "lighthouse": "^13.4.1",
     "npm-check-updates": "^23.0.2",
     "pa11y": "^9.1.1",
+    "patch-package": "^8.0.1",
     "prettier": "^3.9.6",
     "retire": "^5.5.0",
     "structured-data-testing-tool": "^4.5.0",
@@ -85,6 +84,10 @@
     "node": ">=24.0.0"
   },
   "overrides": {
-    "basic-ftp": ">=5.2.0"
+    "basic-ftp": ">=5.2.0",
+    "html-encoding-sniffer": "^6.0.0",
+    "encoding-sniffer": "^1.0.2",
+    "cheerio": "^1.2.0",
+    "babel-polyfill": "npm:core-js@^3.50.0"
   }
 }

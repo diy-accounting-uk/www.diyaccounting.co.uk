@@ -112,7 +112,6 @@ After the first deployment, copy the `CloudFrontDomainName` output from the depl
 | **Testing** | Unit tests (vitest), browser tests (Playwright), behaviour tests, smoke tests |
 | **Compliance** | Pa11y, axe-core, Lighthouse, text spacing (WCAG), ESLint security, npm audit, retire.js |
 | **Reporting** | `npm run compliance:ci-report-md` generates full compliance report |
-| **Architecture** | `npm run diagram:gateway` generates draw.io diagram from CDK |
 | **Formatting** | Spotless (Java) + Prettier (JS/YAML/JSON), enforced in CI |
 
 ## Appendix: Bootstrapping a New AWS Account
