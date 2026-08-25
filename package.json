@@ -5,6 +5,7 @@
   "description": "Gateway static site for diyaccounting.co.uk",
   "private": true,
   "scripts": {
+    "postinstall": "patch-package",
     "start": "npx http-server web/www.diyaccounting.co.uk/public -p 3000",
     "build": "./mvnw clean verify",
     "cdk:synth": "cd cdk-gateway && npx cdk synth --require-approval never --ci true --strict --validation && cd ..",
@@ -72,6 +73,7 @@
     "lighthouse": "^13.4.1",
     "npm-check-updates": "^23.0.2",
     "pa11y": "^9.1.1",
+    "patch-package": "^8.0.1",
     "prettier": "^3.9.6",
     "retire": "^5.5.0",
     "structured-data-testing-tool": "^4.5.0",
@@ -84,6 +86,7 @@
   "overrides": {
     "basic-ftp": ">=5.2.0",
     "html-encoding-sniffer": "^6.0.0",
-    "encoding-sniffer": "^1.0.2"
+    "encoding-sniffer": "^1.0.2",
+    "cheerio": "^1.2.0"
   }
 }
