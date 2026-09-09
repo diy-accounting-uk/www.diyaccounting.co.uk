@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: LicenseRef-PolyForm-Internal-Use-1.0.0
+     Copyright (C) 2006-2026 DIY Accounting Limited -->
 # Using This Repository as a Template
 
 This repository is a GitHub template for deploying static sites to AWS using CDK (Java), S3, and CloudFront.

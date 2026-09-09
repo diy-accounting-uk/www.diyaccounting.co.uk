@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: LicenseRef-PolyForm-Internal-Use-1.0.0
+     Copyright (C) 2006-2026 DIY Accounting Limited -->
 ---
 name: plain-prose
 description: Holds this repo's writing rules for plain, human prose and the LLM-voice tells to cut. Load it before writing any human-facing text — docs, code comments, or chat replies.

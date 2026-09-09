@@ -1,6 +1,6 @@
 #!/bin/bash
-# SPDX-License-Identifier: AGPL-3.0-only
-# Copyright (C) 2025-2026 DIY Accounting Ltd
+# SPDX-License-Identifier: LicenseRef-PolyForm-Internal-Use-1.0.0
+# Copyright (C) 2006-2026 DIY Accounting Limited
 #
 # template-clean.sh — Strip DIY Accounting-specific content, replace with placeholders
 #
@@ -166,8 +166,8 @@ echo "--- Replacing redirects with generic examples ---"
 REDIRECTS_FILE=$(find "$PROJECT_ROOT/web" -name "redirects.toml" 2>/dev/null | head -1)
 if [ -n "$REDIRECTS_FILE" ]; then
   cat > "$REDIRECTS_FILE" << 'TOML'
-# SPDX-License-Identifier: AGPL-3.0-only
-# Copyright (C) 2025-2026 Example Company Ltd
+# SPDX-License-Identifier: YOUR-LICENSE
+# Copyright (C) YYYY Example Company Ltd
 #
 # redirects.toml - Redirect configuration
 # Maps old URLs to new locations on feature sites
@@ -216,8 +216,9 @@ find "$PROJECT_ROOT" -type f \( \
   -not -name "template-clean.sh" \
   -not -name "template-init.sh" \
   -print0 | while IFS= read -r -d '' file; do
-    sedi 's|Copyright (C) 2025-2026 DIY Accounting Ltd|Copyright (C) YYYY Example Company Ltd|g' "$file"
-    sedi 's|Copyright (C) 2025-2026 Example Company Ltd|Copyright (C) YYYY Example Company Ltd|g' "$file"
+    sedi 's|Copyright (C) 2006-2026 DIY Accounting Limited|Copyright (C) YYYY Example Company Ltd|g' "$file"
+    sedi 's|Copyright (C) 2006-2026 Example Company Ltd|Copyright (C) YYYY Example Company Ltd|g' "$file"
+    sedi 's|SPDX-License-Identifier: LicenseRef-PolyForm-Internal-Use-1.0.0|SPDX-License-Identifier: YOUR-LICENSE|g' "$file"
 done
 echo "  SPDX copyright placeholders applied"
 

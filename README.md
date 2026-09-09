@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: LicenseRef-PolyForm-Internal-Use-1.0.0
+     Copyright (C) 2006-2026 DIY Accounting Limited -->
 # www.diyaccounting.co.uk
 
 Gateway static site for [DIY Accounting](https://www.diyaccounting.co.uk) — the main marketing and information site.
@@ -74,4 +76,4 @@ This repo can be used as a GitHub template for new CDK static sites. See [TEMPLA
 
 ## License
 
-AGPL-3.0-only. Copyright (C) 2025-2026 DIY Accounting Ltd.
+Free to use, source available under the PolyForm Internal Use License. Copyright (C) 2006-2026 DIY Accounting Limited. See [LICENSE](LICENSE) for the full terms, which permit use for your own accounts and for accountants to prepare client accounts.
