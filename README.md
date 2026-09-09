@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: LicenseRef-PolyForm-Internal-Use-1.0.0
+     Copyright (C) 2006-2026 DIY Accounting Limited -->
 # www.diyaccounting.co.uk
 
 Gateway static site for [DIY Accounting](https://www.diyaccounting.co.uk) — the main marketing and information site.
