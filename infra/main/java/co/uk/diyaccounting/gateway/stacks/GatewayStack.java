@@ -55,7 +55,11 @@ import software.amazon.awscdk.services.cloudfront.Signing;
 import software.amazon.awscdk.services.cloudfront.ViewerProtocolPolicy;
 import software.amazon.awscdk.services.cloudfront.origins.S3BucketOrigin;
 import software.amazon.awscdk.services.cloudfront.origins.S3BucketOriginWithOACProps;
+import software.amazon.awscdk.services.cognito.CfnIdentityPool;
+import software.amazon.awscdk.services.cognito.CfnIdentityPoolRoleAttachment;
+import software.amazon.awscdk.services.iam.FederatedPrincipal;
 import software.amazon.awscdk.services.iam.PolicyStatement;
+import software.amazon.awscdk.services.iam.Role;
 import software.amazon.awscdk.services.iam.ServicePrincipal;
 import software.amazon.awscdk.services.logs.CfnDelivery;
 import software.amazon.awscdk.services.logs.CfnDeliveryDestination;
@@ -64,6 +68,8 @@ import software.amazon.awscdk.services.logs.CfnDeliveryProps;
 import software.amazon.awscdk.services.logs.CfnDeliverySource;
 import software.amazon.awscdk.services.logs.CfnDeliverySourceProps;
 import software.amazon.awscdk.services.logs.ILogGroup;
+import software.amazon.awscdk.services.oam.CfnLink;
+import software.amazon.awscdk.services.rum.CfnAppMonitor;
 import software.amazon.awscdk.services.s3.BlockPublicAccess;
 import software.amazon.awscdk.services.s3.Bucket;
 import software.amazon.awscdk.services.s3.BucketEncryption;
@@ -78,7 +84,8 @@ import software.constructs.Construct;
  * Key differences from ApexStack:
  * - No Route53 records (those live in root account, managed by root.diyaccounting.co.uk repo)
  * - No Lambda function URL integration
- * - Simpler CSP (no RUM endpoint, no API connections, no Cognito domain)
+ * - Simpler CSP (no API connections, no Cognito domain, beyond the RUM/Cognito identity
+ *   endpoints its own web vitals monitoring needs)
  * - Cert referenced by ARN, not created by CDK (cross-account zone problem)
  */
 public class GatewayStack extends Stack {
@@ -106,6 +113,12 @@ public class GatewayStack extends Stack {
 
         /** Domain names for the CloudFront distribution (e.g. ci-gateway.diyaccounting.co.uk) */
         List<String> domainNames();
+
+        /** ARN of Submit's us-east-1 CloudWatch OAM sink; blank skips the cross-account metrics link. */
+        @Value.Default
+        default String metricsSinkArn() {
+            return "";
+        }
 
         static ImmutableGatewayStackProps.Builder builder() {
             return ImmutableGatewayStackProps.builder();
@@ -165,7 +178,9 @@ public class GatewayStack extends Stack {
                 this.originBucket,
                 S3BucketOriginWithOACProps.builder().originAccessControl(oac).build());
 
-        // Response headers policy: simpler CSP for static site (no RUM, no API, no Cognito)
+        // Response headers policy: simpler CSP for static site (no API, no Cognito domain),
+        // plus the RUM dataplane and the unauthenticated Cognito identity/STS endpoints the
+        // RUM web client needs to send web vitals.
         ResponseHeadersPolicy responseHeadersPolicy = ResponseHeadersPolicy.Builder.create(
                         this, resourcePrefix + "-HeadersPolicy")
                 .responseHeadersPolicyName(resourcePrefix + "-headers")
@@ -182,11 +197,12 @@ public class GatewayStack extends Stack {
                 .securityHeadersBehavior(ResponseSecurityHeadersBehavior.builder()
                         .contentSecurityPolicy(ResponseHeadersContentSecurityPolicy.builder()
                                 .contentSecurityPolicy("default-src 'self'; "
-                                        + "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; "
+                                        + "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://client.rum.us-east-1.amazonaws.com; "
                                         + "style-src 'self' 'unsafe-inline'; "
                                         + "img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com; "
                                         + "font-src 'self'; "
-                                        + "connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; "
+                                        + "connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com "
+                                        + "https://dataplane.rum.us-east-1.amazonaws.com https://cognito-identity.us-east-1.amazonaws.com https://sts.us-east-1.amazonaws.com; "
                                         + "frame-ancestors 'none'; "
                                         + "form-action 'self';")
                                 .override(true)
@@ -336,8 +352,11 @@ public class GatewayStack extends Stack {
         var webDocRootSource = Source.asset(
                 publicDir.toString(),
                 AssetOptions.builder().assetHashType(AssetHashType.SOURCE).build());
+        // The committed lib/rum-config.js is the local placeholder; the bucket's copy is written
+        // by the RUM deployment below and must not be overwritten by a later doc-root sync.
         this.webDeployment = BucketDeployment.Builder.create(this, resourcePrefix + "-DeployWebContent")
                 .sources(List.of(webDocRootSource))
+                .exclude(List.of("lib/rum-config.js"))
                 .destinationBucket(this.originBucket)
                 .distribution(distribution)
                 .distributionPaths(
@@ -348,6 +367,77 @@ public class GatewayStack extends Stack {
                 .memoryLimit(1024)
                 .ephemeralStorageSize(Size.gibibytes(2))
                 .build();
+
+        // CloudWatch RUM: an app monitor fed by an unauthenticated Cognito identity so the
+        // browser can call PutRumEvents directly, and a config file written by its own
+        // BucketDeployment so no page in the doc root needs editing.
+        CfnIdentityPool rumIdentityPool = CfnIdentityPool.Builder.create(this, resourcePrefix + "-RumIdentityPool")
+                .allowUnauthenticatedIdentities(true)
+                .build();
+
+        Role rumGuestRole = Role.Builder.create(this, resourcePrefix + "-RumGuestRole")
+                .assumedBy(new FederatedPrincipal(
+                        "cognito-identity.amazonaws.com",
+                        Map.of(
+                                "StringEquals", Map.of("cognito-identity.amazonaws.com:aud", rumIdentityPool.getRef()),
+                                "ForAnyValue:StringLike",
+                                        Map.of("cognito-identity.amazonaws.com:amr", "unauthenticated")),
+                        "sts:AssumeRoleWithWebIdentity"))
+                .build();
+        rumGuestRole.addToPolicy(PolicyStatement.Builder.create()
+                .actions(List.of("rum:PutRumEvents"))
+                .resources(List.of("*"))
+                .build());
+
+        CfnIdentityPoolRoleAttachment.Builder.create(this, resourcePrefix + "-RumIdentityPoolRole")
+                .identityPoolId(rumIdentityPool.getRef())
+                .roles(Map.of("unauthenticated", rumGuestRole.getRoleArn()))
+                .build();
+
+        String rumMonitorName = "prod".equals(props.envName()) ? "gateway-web" : "ci-gateway-web";
+        CfnAppMonitor rumMonitor = CfnAppMonitor.Builder.create(this, resourcePrefix + "-RumAppMonitor")
+                .name(rumMonitorName)
+                .domainList(props.domainNames())
+                .appMonitorConfiguration(CfnAppMonitor.AppMonitorConfigurationProperty.builder()
+                        .sessionSampleRate(1.0)
+                        .allowCookies(true)
+                        .enableXRay(true)
+                        .guestRoleArn(rumGuestRole.getRoleArn())
+                        .identityPoolId(rumIdentityPool.getRef())
+                        .telemetries(List.of("performance", "errors", "http"))
+                        .build())
+                .build();
+
+        // CDK resolves the string tokens (monitor id, pool ref, role ARN) inside Source.data
+        // at deploy time, so the written file carries the real values, not placeholders.
+        String rumConfigScript = "window.__RUM_CONFIG__ = {\"appMonitorId\":\"" + rumMonitor.getAttrId()
+                + "\",\"identityPoolId\":\"" + rumIdentityPool.getRef() + "\",\"guestRoleArn\":\""
+                + rumGuestRole.getRoleArn() + "\",\"region\":\"us-east-1\",\"sessionSampleRate\":1};";
+        BucketDeployment rumConfigDeployment = BucketDeployment.Builder.create(
+                        this, resourcePrefix + "-DeployRumConfig")
+                .sources(List.of(Source.data("lib/rum-config.js", rumConfigScript)))
+                .destinationBucket(this.originBucket)
+                .distribution(distribution)
+                .distributionPaths(List.of("/lib/rum-config.js"))
+                .retainOnDelete(true)
+                .prune(false)
+                .memoryLimit(1024)
+                .ephemeralStorageSize(Size.gibibytes(2))
+                .build();
+        rumConfigDeployment.getNode().addDependency(this.webDeployment);
+
+        // Cross-account metrics link: shares this account's CloudWatch metrics with Submit's
+        // us-east-1 monitoring sink, gated on the sink ARN as the redirect function is gated
+        // on its file.
+        if (!props.metricsSinkArn().isBlank()) {
+            CfnLink.Builder.create(this, resourcePrefix + "-MetricsLink")
+                    .resourceTypes(List.of("AWS::CloudWatch::Metric"))
+                    .labelTemplate("$AccountName")
+                    .sinkIdentifier(props.metricsSinkArn())
+                    .build();
+        } else {
+            infof("metricsSinkArn is blank, skipping the cross-account metrics link for %s", props.envName());
+        }
 
         // Outputs
         cfnOutput(this, "DistributionDomainName", this.distribution.getDomainName());

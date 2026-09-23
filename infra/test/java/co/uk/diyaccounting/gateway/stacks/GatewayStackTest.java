@@ -1,0 +1,170 @@
+// SPDX-License-Identifier: LicenseRef-PolyForm-Internal-Use-1.0.0
+// Copyright (C) 2006-2026 DIY Accounting Limited
+
+package co.uk.diyaccounting.gateway.stacks;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import software.amazon.awscdk.App;
+import software.amazon.awscdk.Environment;
+import software.amazon.awscdk.assertions.Match;
+import software.amazon.awscdk.assertions.Template;
+
+class GatewayStackTest {
+
+    private static final List<String> PROD_DOMAIN_NAMES =
+            List.of("diyaccounting.co.uk", "www.diyaccounting.co.uk", "prod-gateway.diyaccounting.co.uk");
+    private static final List<String> CI_DOMAIN_NAMES = List.of("ci-gateway.diyaccounting.co.uk");
+
+    private static Path writeDocRoot(Path tempDir) throws IOException {
+        Path publicDir = tempDir.resolve("public");
+        Files.createDirectories(publicDir);
+        Files.writeString(publicDir.resolve("index.html"), "<html></html>");
+        return publicDir;
+    }
+
+    private static Template synth(String envName, Path publicDir, List<String> domainNames) {
+        return synth(envName, publicDir, domainNames, "");
+    }
+
+    private static Template synth(String envName, Path publicDir, List<String> domainNames, String metricsSinkArn) {
+        App app = new App();
+        GatewayStack stack = new GatewayStack(
+                app,
+                "Test" + envName + "GatewayStack",
+                GatewayStack.GatewayStackProps.builder()
+                        .env(Environment.builder()
+                                .account("283165661847")
+                                .region("us-east-1")
+                                .build())
+                        .envName(envName)
+                        .certificateArn("arn:aws:acm:us-east-1:283165661847:certificate/placeholder")
+                        .docRootPath(publicDir.toString())
+                        .domainNames(domainNames)
+                        .metricsSinkArn(metricsSinkArn)
+                        .build());
+        return Template.fromStack(stack);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static String contentSecurityPolicyFrom(Template template) {
+        Map<String, Map<String, Object>> policies = template.findResources("AWS::CloudFront::ResponseHeadersPolicy");
+        Map<String, Object> policy = policies.values().iterator().next();
+        Map<String, Object> properties = (Map<String, Object>) policy.get("Properties");
+        Map<String, Object> config = (Map<String, Object>) properties.get("ResponseHeadersPolicyConfig");
+        Map<String, Object> securityHeadersConfig = (Map<String, Object>) config.get("SecurityHeadersConfig");
+        Map<String, Object> csp = (Map<String, Object>) securityHeadersConfig.get("ContentSecurityPolicy");
+        return (String) csp.get("ContentSecurityPolicy");
+    }
+
+    @Test
+    void appMonitorIsNamedPerEnvironmentAndCarriesPerformanceTelemetry(@TempDir Path tempDir) throws IOException {
+        Path publicDir = writeDocRoot(tempDir);
+
+        Template prodTemplate = synth("prod", publicDir, PROD_DOMAIN_NAMES);
+        prodTemplate.resourceCountIs("AWS::RUM::AppMonitor", 1);
+        prodTemplate.hasResourceProperties(
+                "AWS::RUM::AppMonitor",
+                Match.objectLike(Map.of(
+                        "Name",
+                        "gateway-web",
+                        "AppMonitorConfiguration",
+                        Match.objectLike(Map.of("Telemetries", Match.arrayWith(List.of("performance")))))));
+
+        Template ciTemplate = synth("ci", publicDir, CI_DOMAIN_NAMES);
+        ciTemplate.resourceCountIs("AWS::RUM::AppMonitor", 1);
+        ciTemplate.hasResourceProperties(
+                "AWS::RUM::AppMonitor",
+                Match.objectLike(Map.of(
+                        "Name",
+                        "ci-gateway-web",
+                        "AppMonitorConfiguration",
+                        Match.objectLike(Map.of("Telemetries", Match.arrayWith(List.of("performance")))))));
+    }
+
+    @Test
+    void identityPoolAllowsUnauthenticatedIdentities(@TempDir Path tempDir) throws IOException {
+        Path publicDir = writeDocRoot(tempDir);
+        Template template = synth("ci", publicDir, CI_DOMAIN_NAMES);
+
+        template.resourceCountIs("AWS::Cognito::IdentityPool", 1);
+        template.hasResourceProperties(
+                "AWS::Cognito::IdentityPool", Match.objectLike(Map.of("AllowUnauthenticatedIdentities", true)));
+    }
+
+    @Test
+    void guestRolePolicyCarriesPutRumEvents(@TempDir Path tempDir) throws IOException {
+        Path publicDir = writeDocRoot(tempDir);
+        Template template = synth("ci", publicDir, CI_DOMAIN_NAMES);
+
+        Map<String, Map<String, Object>> policies = template.findResources(
+                "AWS::IAM::Policy",
+                Match.objectLike(Map.of(
+                        "Properties",
+                        Match.objectLike(Map.of(
+                                "PolicyDocument",
+                                Match.objectLike(Map.of(
+                                        "Statement",
+                                        Match.arrayWith(
+                                                List.of(Match.objectLike(Map.of("Action", "rum:PutRumEvents")))))))))));
+        assertTrue(!policies.isEmpty(), "expected an IAM policy carrying rum:PutRumEvents");
+    }
+
+    @Test
+    void contentSecurityPolicyCoversTheRumDataplaneAndCognitoIdentity(@TempDir Path tempDir) throws IOException {
+        Path publicDir = writeDocRoot(tempDir);
+        Template template = synth("ci", publicDir, CI_DOMAIN_NAMES);
+
+        String contentSecurityPolicy = contentSecurityPolicyFrom(template);
+
+        assertTrue(contentSecurityPolicy.contains("dataplane.rum.us-east-1.amazonaws.com"));
+        assertTrue(contentSecurityPolicy.contains("cognito-identity.us-east-1.amazonaws.com"));
+        assertTrue(contentSecurityPolicy.contains("sts.us-east-1.amazonaws.com"));
+        assertTrue(contentSecurityPolicy.contains("client.rum.us-east-1.amazonaws.com"));
+    }
+
+    @Test
+    void docRootSyncLeavesTheRumConfigToTheRumDeployment(@TempDir Path tempDir) throws IOException {
+        Path publicDir = writeDocRoot(tempDir);
+        Template template = synth("ci", publicDir, CI_DOMAIN_NAMES);
+
+        template.hasResourceProperties(
+                "Custom::CDKBucketDeployment", Match.objectLike(Map.of("Exclude", List.of("lib/rum-config.js"))));
+        template.hasResourceProperties(
+                "Custom::CDKBucketDeployment",
+                Match.objectLike(Map.of("DistributionPaths", List.of("/lib/rum-config.js"))));
+    }
+
+    @Test
+    void metricsLinkIsCreatedWhenSinkArnIsConfigured(@TempDir Path tempDir) throws IOException {
+        Path publicDir = writeDocRoot(tempDir);
+        String sinkArn = "arn:aws:oam:us-east-1:367191799875:sink/00000000-0000-0000-0000-000000000000";
+        Template template = synth("ci", publicDir, CI_DOMAIN_NAMES, sinkArn);
+
+        template.resourceCountIs("AWS::Oam::Link", 1);
+        template.hasResourceProperties(
+                "AWS::Oam::Link",
+                Match.objectLike(Map.of(
+                        "ResourceTypes",
+                        List.of("AWS::CloudWatch::Metric"),
+                        "LabelTemplate",
+                        "$AccountName",
+                        "SinkIdentifier",
+                        sinkArn)));
+    }
+
+    @Test
+    void metricsLinkIsSkippedWhenSinkArnIsBlank(@TempDir Path tempDir) throws IOException {
+        Path publicDir = writeDocRoot(tempDir);
+        Template template = synth("ci", publicDir, CI_DOMAIN_NAMES);
+
+        template.resourceCountIs("AWS::Oam::Link", 0);
+    }
+}

@@ -52,13 +52,24 @@ public class GatewayEnvironment {
             domainNames = List.copyOf(names);
         }
 
-        var gateway = new GatewayEnvironment(app, envName, certificateArn, docRootPath, domainNames);
+        var ciMetricsSinkArn = envOr("CI_METRICS_SINK_ARN", KindCdk.getContextValueString(app, "ciMetricsSinkArn", ""));
+        var prodMetricsSinkArn =
+                envOr("PROD_METRICS_SINK_ARN", KindCdk.getContextValueString(app, "prodMetricsSinkArn", ""));
+        var metricsSinkArn = "prod".equals(envName) ? prodMetricsSinkArn : ciMetricsSinkArn;
+
+        var gateway =
+                new GatewayEnvironment(app, envName, certificateArn, docRootPath, domainNames, metricsSinkArn);
         app.synth();
         infof("CDK synth complete for gateway environment");
     }
 
     public GatewayEnvironment(
-            App app, String envName, String certificateArn, String docRootPath, List<String> domainNames) {
+            App app,
+            String envName,
+            String certificateArn,
+            String docRootPath,
+            List<String> domainNames,
+            String metricsSinkArn) {
         // CloudFront requires us-east-1 for certificates
         Environment usEast1Env = Environment.builder()
                 .region("us-east-1")
@@ -77,6 +88,7 @@ public class GatewayEnvironment {
                         .certificateArn(certificateArn)
                         .docRootPath(docRootPath)
                         .domainNames(domainNames)
+                        .metricsSinkArn(metricsSinkArn)
                         .build());
     }
 }
