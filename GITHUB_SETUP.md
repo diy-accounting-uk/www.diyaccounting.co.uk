@@ -39,9 +39,9 @@ Repo-level (referenced by both workflows):
 
 | Variable | Value source |
 |---|---|
-| `GATEWAY_ACTIONS_ROLE_ARN` | `aws --profile gateway iam get-role --role-name gateway-github-actions-role --query Role.Arn --output text` |
-| `GATEWAY_DEPLOY_ROLE_ARN` | `aws --profile gateway iam get-role --role-name gateway-deployment-role --query Role.Arn --output text` |
-| `GATEWAY_CERTIFICATE_ARN` | `aws --profile gateway acm list-certificates --region us-east-1 --query "CertificateSummaryList[].CertificateArn | [0]" --output text` (single wildcard cert covering ci+prod aliases) |
+| `GATEWAY_ACTIONS_ROLE_ARN` | `aws --profile diya-gateway iam get-role --role-name gateway-github-actions-role --query Role.Arn --output text` |
+| `GATEWAY_DEPLOY_ROLE_ARN` | `aws --profile diya-gateway iam get-role --role-name gateway-deployment-role --query Role.Arn --output text` |
+| `GATEWAY_CERTIFICATE_ARN` | `aws --profile diya-gateway acm list-certificates --region us-east-1 --query "CertificateSummaryList[].CertificateArn | [0]" --output text` (single wildcard cert covering ci+prod aliases) |
 
 The `deploy.yml` job declares `environment: ci`, so these vars resolve from the env scope first if set there, falling back to repo-level.
 
@@ -74,15 +74,15 @@ This repo is also designed as a generic CDK static-site template (see `TEMPLATE.
 
 ```bash
 # Role ARNs
-aws --profile gateway iam list-roles \
+aws --profile diya-gateway iam list-roles \
   --query "Roles[?contains(RoleName, 'github-actions') || contains(RoleName, 'deployment')].[RoleName,Arn]" \
   --output table
 
 # Cert ARN (us-east-1, required for CloudFront)
-aws --profile gateway acm list-certificates --region us-east-1 \
+aws --profile diya-gateway acm list-certificates --region us-east-1 \
   --query "CertificateSummaryList[].[DomainName,CertificateArn]" --output table
 
 # Verify OIDC trust on the role
-aws --profile gateway iam get-role --role-name gateway-github-actions-role \
+aws --profile diya-gateway iam get-role --role-name gateway-github-actions-role \
   --query 'Role.AssumeRolePolicyDocument'
 ```

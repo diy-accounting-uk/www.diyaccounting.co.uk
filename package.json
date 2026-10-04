@@ -61,7 +61,7 @@
     "update-to-latest": "npx npm-check-updates --upgrade --enginesNode --verbose --install always",
     "update:java": "./scripts/update-java.sh",
     "update:node": "npm run update-to-latest",
-    "resources:gateway": "node scripts/generate-aws-resources.js --profile gateway"
+    "resources:gateway": "node scripts/generate-aws-resources.js --profile diya-gateway"
   },
   "devDependencies": {
     "@axe-core/cli": "^4.13.0",

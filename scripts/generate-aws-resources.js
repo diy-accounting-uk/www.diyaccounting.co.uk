@@ -6,7 +6,7 @@
  * Generate AWS Resources Report
  *
  * Catalogues AWS resources in the gateway account from live AWS data.
- * Requires AWS SSO authentication with the gateway profile.
+ * Requires AWS SSO authentication with the diya-gateway profile.
  *
  * Usage:
  *   node scripts/generate-aws-resources.js [--profile PROFILE] [--output FILE]
@@ -31,7 +31,7 @@ const getArg = (name, defaultValue) => {
   return defaultValue;
 };
 
-const profile = getArg("--profile", "gateway");
+const profile = getArg("--profile", "diya-gateway");
 const outputFile = getArg("--output", "AWS_RESOURCES.md");
 
 function aws(command) {
