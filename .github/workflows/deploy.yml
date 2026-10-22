@@ -11,7 +11,7 @@ on:
       - '!dependabot/**'
     paths:
       - 'infra/main/**'
-      - 'web/public/**'
+      - 'web/www.diyaccounting.co.uk/public/**'
       - '.env.ci'
       - '.env.prod'
       - '**/cdk.json'
@@ -19,7 +19,6 @@ on:
       - 'LICENSE'
       - 'package.json'
       - 'pom.xml'
-      - 'web/public/**'
       - '.github/workflows/deploy.yml'
   workflow_dispatch:
     inputs:
