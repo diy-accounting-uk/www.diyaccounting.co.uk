@@ -5,16 +5,23 @@
 (function () {
   if (typeof gtag !== "function") return;
 
+  const itemIdByHost = {
+    "submit.diyaccounting.co.uk": "submit",
+    "spreadsheets.diyaccounting.co.uk": "spreadsheets",
+    "diya-gl.co.uk": "diya-gl",
+  };
+
   const buttons = document.querySelectorAll(".gateway-btn");
   for (let i = 0; i < buttons.length; i++) {
     (function (btn) {
       const href = btn.getAttribute("href") || "";
-      let itemId = null;
-      if (href.indexOf("submit.diyaccounting.co.uk") !== -1) {
-        itemId = "submit";
-      } else if (href.indexOf("spreadsheets.diyaccounting.co.uk") !== -1) {
-        itemId = "spreadsheets";
+      let host = "";
+      try {
+        host = new URL(href, window.location.href).hostname;
+      } catch {
+        host = "";
       }
+      const itemId = Object.prototype.hasOwnProperty.call(itemIdByHost, host) ? itemIdByHost[host] : null;
       if (itemId) {
         btn.addEventListener("click", function () {
           gtag("event", "select_content", {
