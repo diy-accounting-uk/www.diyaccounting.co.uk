@@ -88,7 +88,8 @@
     "html-encoding-sniffer": "^6.0.0",
     "encoding-sniffer": "^1.0.2",
     "cheerio": "^1.2.0",
-    "babel-polyfill": "npm:core-js@^3.50.0"
+    "babel-polyfill": "npm:core-js@^3.50.0",
+    "validator": "^13.15.35"
   },
   "license": "SEE LICENSE IN LICENSE"
 }
