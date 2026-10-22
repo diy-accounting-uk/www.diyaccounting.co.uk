@@ -14,6 +14,8 @@
         itemId = "submit";
       } else if (href.indexOf("spreadsheets.diyaccounting.co.uk") !== -1) {
         itemId = "spreadsheets";
+      } else if (href.indexOf("diya-gl.co.uk") !== -1) {
+        itemId = "diya-gl";
       }
       if (itemId) {
         btn.addEventListener("click", function () {
