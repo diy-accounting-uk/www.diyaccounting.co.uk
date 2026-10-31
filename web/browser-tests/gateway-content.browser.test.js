@@ -56,6 +56,14 @@ test.describe("Gateway index.html", () => {
     await expect(diyaGlLink).toBeVisible();
     expect(await diyaGlLink.getAttribute("href")).toBe("https://diya-gl.co.uk/");
     await expect(diyaGlLink.locator(".btn-title")).toHaveText("DIYA-GL");
+
+    const marketingLink = page.locator('a.gateway-btn:has-text("Marketing resources")');
+    await expect(marketingLink).toBeVisible();
+    expect(await marketingLink.getAttribute("href")).toBe("https://marketing.diyaccounting.co.uk/");
+
+    const developerLink = page.locator('a.gateway-btn:has-text("Developer resources")');
+    await expect(developerLink).toBeVisible();
+    expect(await developerLink.getAttribute("href")).toBe("https://developer.diyaccounting.co.uk/");
   });
 
   test("has JSON-LD structured data", async ({ page }) => {
