@@ -89,7 +89,16 @@
     "encoding-sniffer": "^1.0.2",
     "cheerio": "^1.2.0",
     "babel-polyfill": "npm:core-js@^3.50.0",
-    "validator": "^13.15.35"
+    "validator": "^13.15.35",
+    "eslint": {
+      "minimatch": "^11.0.1"
+    },
+    "@eslint/config-array": {
+      "minimatch": "^11.0.1"
+    },
+    "glob": {
+      "minimatch": "^11.0.1"
+    }
   },
   "license": "SEE LICENSE IN LICENSE"
 }
