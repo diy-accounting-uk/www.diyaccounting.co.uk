@@ -57,6 +57,7 @@ import software.amazon.awscdk.services.cloudfront.origins.S3BucketOrigin;
 import software.amazon.awscdk.services.cloudfront.origins.S3BucketOriginWithOACProps;
 import software.amazon.awscdk.services.cognito.CfnIdentityPool;
 import software.amazon.awscdk.services.cognito.CfnIdentityPoolRoleAttachment;
+import software.amazon.awscdk.services.iam.ArnPrincipal;
 import software.amazon.awscdk.services.iam.FederatedPrincipal;
 import software.amazon.awscdk.services.iam.PolicyStatement;
 import software.amazon.awscdk.services.iam.Role;
@@ -89,6 +90,10 @@ import software.constructs.Construct;
  * - Cert referenced by ARN, not created by CDK (cross-account zone problem)
  */
 public class GatewayStack extends Stack {
+
+    private static final String consoleCaptureRoleName = "gateway-console-capture-read";
+    private static final String consoleCapturePrincipalArn = "arn:aws:iam::972912397388:role/prod-env-console-capture";
+    private static final String consoleCaptureExternalId = "submit-console-capture";
 
     public final Bucket originBucket;
     public final Distribution distribution;
@@ -425,6 +430,22 @@ public class GatewayStack extends Stack {
                 .ephemeralStorageSize(Size.gibibytes(2))
                 .build();
         rumConfigDeployment.getNode().addDependency(this.webDeployment);
+
+        // Read role for Submit's prod console-capture Lambda to render the RUM monitor's metric
+        // widgets. The role name is account-global, so only the prod stack creates it.
+        if ("prod".equals(props.envName())) {
+            Role consoleCaptureRole = Role.Builder.create(this, resourcePrefix + "-ConsoleCaptureRole")
+                    .roleName(consoleCaptureRoleName)
+                    .assumedBy(new ArnPrincipal(consoleCapturePrincipalArn))
+                    .externalIds(List.of(consoleCaptureExternalId))
+                    .maxSessionDuration(Duration.hours(1))
+                    .build();
+            consoleCaptureRole.addToPolicy(PolicyStatement.Builder.create()
+                    .actions(List.of("cloudwatch:GetMetricWidgetImage"))
+                    .resources(List.of("*"))
+                    .build());
+            cfnOutput(this, "ConsoleCaptureRoleArn", consoleCaptureRole.getRoleArn());
+        }
 
         // Cross-account metrics link: shares this account's CloudWatch metrics with Submit's
         // us-east-1 monitoring sink, gated on the sink ARN as the redirect function is gated
