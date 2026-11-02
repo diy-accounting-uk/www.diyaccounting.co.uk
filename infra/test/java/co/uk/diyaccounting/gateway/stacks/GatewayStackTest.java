@@ -189,9 +189,15 @@ class GatewayStackTest {
                                         "Effect",
                                         "Allow",
                                         "Principal",
-                                        Map.of("AWS", "arn:aws:iam::972912397388:role/prod-env-console-capture"),
+                                        Map.of("AWS", "arn:aws:iam::972912397388:root"),
                                         "Condition",
-                                        Map.of("StringEquals", Map.of("sts:ExternalId", "submit-console-capture")))))))));
+                                        Map.of(
+                                                "ArnEquals",
+                                                Map.of(
+                                                        "aws:PrincipalArn",
+                                                        "arn:aws:iam::972912397388:role/prod-env-console-capture"),
+                                                "StringEquals",
+                                                Map.of("sts:ExternalId", "submit-console-capture")))))))));
         prodTemplate.hasResourceProperties(
                 "AWS::IAM::Policy",
                 Match.objectLike(Map.of(
