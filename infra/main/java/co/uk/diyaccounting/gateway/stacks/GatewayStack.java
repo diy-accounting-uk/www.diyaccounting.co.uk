@@ -3,7 +3,6 @@
  * Copyright (C) 2006-2026 DIY Accounting Limited
  */
 
-
 package co.uk.diyaccounting.gateway.stacks;
 
 import static co.uk.diyaccounting.gateway.utils.Kind.infof;
@@ -92,6 +91,7 @@ import software.constructs.Construct;
 public class GatewayStack extends Stack {
 
     private static final String consoleCaptureRoleName = "gateway-console-capture-read";
+    private static final String consoleCaptureAccountRootArn = "arn:aws:iam::972912397388:root";
     private static final String consoleCapturePrincipalArn = "arn:aws:iam::972912397388:role/prod-env-console-capture";
     private static final String consoleCaptureExternalId = "submit-console-capture";
 
@@ -432,11 +432,15 @@ public class GatewayStack extends Stack {
         rumConfigDeployment.getNode().addDependency(this.webDeployment);
 
         // Read role for Submit's prod console-capture Lambda to render the RUM monitor's metric
-        // widgets. The role name is account-global, so only the prod stack creates it.
+        // widgets. The role name is account-global, so only the prod stack creates it. IAM rejects a
+        // role ARN principal for a role that does not exist yet, so the trust names the submit-prod
+        // account and pins the caller with aws:PrincipalArn.
         if ("prod".equals(props.envName())) {
             Role consoleCaptureRole = Role.Builder.create(this, resourcePrefix + "-ConsoleCaptureRole")
                     .roleName(consoleCaptureRoleName)
-                    .assumedBy(new ArnPrincipal(consoleCapturePrincipalArn))
+                    .assumedBy(new ArnPrincipal(consoleCaptureAccountRootArn)
+                            .withConditions(
+                                    Map.of("ArnEquals", Map.of("aws:PrincipalArn", consoleCapturePrincipalArn))))
                     .externalIds(List.of(consoleCaptureExternalId))
                     .maxSessionDuration(Duration.hours(1))
                     .build();
