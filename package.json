@@ -69,6 +69,7 @@
     "aws-cdk": "^2.1143.0",
     "eslint": "^10.11.0",
     "eslint-plugin-security": "^4.1.0",
+    "globals": "^17.14.0",
     "http-server": "^14.1.1",
     "lighthouse": "^13.6.0",
     "npm-check-updates": "^23.1.0",
