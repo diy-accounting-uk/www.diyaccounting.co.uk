@@ -167,4 +167,45 @@ class GatewayStackTest {
 
         template.resourceCountIs("AWS::Oam::Link", 0);
     }
+
+    @Test
+    void consoleCaptureRoleIsProdOnlyAndReadsMetricWidgetImages(@TempDir Path tempDir) throws IOException {
+        Path publicDir = writeDocRoot(tempDir);
+
+        Template prodTemplate = synth("prod", publicDir, PROD_DOMAIN_NAMES);
+        prodTemplate.hasResourceProperties(
+                "AWS::IAM::Role",
+                Match.objectLike(Map.of(
+                        "RoleName",
+                        "gateway-console-capture-read",
+                        "MaxSessionDuration",
+                        3600,
+                        "AssumeRolePolicyDocument",
+                        Match.objectLike(Map.of(
+                                "Statement",
+                                List.of(Map.of(
+                                        "Action",
+                                        "sts:AssumeRole",
+                                        "Effect",
+                                        "Allow",
+                                        "Principal",
+                                        Map.of("AWS", "arn:aws:iam::972912397388:role/prod-env-console-capture"),
+                                        "Condition",
+                                        Map.of("StringEquals", Map.of("sts:ExternalId", "submit-console-capture")))))))));
+        prodTemplate.hasResourceProperties(
+                "AWS::IAM::Policy",
+                Match.objectLike(Map.of(
+                        "PolicyDocument",
+                        Match.objectLike(Map.of(
+                                "Statement",
+                                List.of(Map.of(
+                                        "Action", "cloudwatch:GetMetricWidgetImage",
+                                        "Effect", "Allow",
+                                        "Resource", "*")))))));
+        prodTemplate.hasOutput("ConsoleCaptureRoleArn", Match.anyValue());
+
+        Template ciTemplate = synth("ci", publicDir, CI_DOMAIN_NAMES);
+        ciTemplate.resourcePropertiesCountIs(
+                "AWS::IAM::Role", Match.objectLike(Map.of("RoleName", "gateway-console-capture-read")), 0);
+    }
 }
