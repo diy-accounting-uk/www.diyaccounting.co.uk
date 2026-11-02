@@ -103,11 +103,17 @@
         var spreadsheetsUrl = "https://" + env + "-spreadsheets.diyaccounting.co.uk";
         var links = document.querySelectorAll("a[href]");
         for (var i = 0; i < links.length; i++) {
-          var href = links[i].getAttribute("href");
-          if (href.indexOf("https://submit.diyaccounting.co.uk") === 0) {
-            links[i].setAttribute("href", href.replace("https://submit.diyaccounting.co.uk", submitUrl));
-          } else if (href.indexOf("https://spreadsheets.diyaccounting.co.uk") === 0) {
-            links[i].setAttribute("href", href.replace("https://spreadsheets.diyaccounting.co.uk", spreadsheetsUrl));
+          var parsed;
+          try {
+            parsed = new URL(links[i].getAttribute("href"));
+          } catch (e) {
+            continue;
+          }
+          var rest = parsed.pathname + parsed.search + parsed.hash;
+          if (parsed.protocol === "https:" && parsed.hostname === "submit.diyaccounting.co.uk") {
+            links[i].setAttribute("href", submitUrl + rest);
+          } else if (parsed.protocol === "https:" && parsed.hostname === "spreadsheets.diyaccounting.co.uk") {
+            links[i].setAttribute("href", spreadsheetsUrl + rest);
           }
         }
       })();

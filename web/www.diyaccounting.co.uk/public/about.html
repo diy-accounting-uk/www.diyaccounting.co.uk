@@ -165,9 +165,14 @@
         var submitUrl = env === "ci" ? "https://ci-submit.diyaccounting.co.uk" : "https://submit.diyaccounting.co.uk";
         var links = document.querySelectorAll("a[href]");
         for (var i = 0; i < links.length; i++) {
-          var href = links[i].getAttribute("href");
-          if (href.indexOf("https://submit.diyaccounting.co.uk") === 0) {
-            links[i].setAttribute("href", href.replace("https://submit.diyaccounting.co.uk", submitUrl));
+          var parsed;
+          try {
+            parsed = new URL(links[i].getAttribute("href"));
+          } catch (e) {
+            continue;
+          }
+          if (parsed.protocol === "https:" && parsed.hostname === "submit.diyaccounting.co.uk") {
+            links[i].setAttribute("href", submitUrl + parsed.pathname + parsed.search + parsed.hash);
           }
         }
       })();

@@ -80,7 +80,7 @@ describe("Sitemap validation", () => {
     const urls = extractSitemapUrls(xml);
     expect(urls.length).toBeGreaterThan(0);
     for (const url of urls) {
-      expect(url, `URL ${url} should start with ${site.domain}`).toMatch(new RegExp(`^${site.domain.replace(/\./g, "\\.")}`));
+      expect(new URL(url).origin, `URL ${url} should start with ${site.domain}`).toBe(site.domain);
     }
   });
 
