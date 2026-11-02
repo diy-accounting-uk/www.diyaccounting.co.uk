@@ -4,6 +4,15 @@
 // behaviour-tests/helpers/playwrightTestWithout.js
 import { test as base } from "@playwright/test";
 
+function isRumHost(url) {
+  try {
+    const { protocol, hostname } = new URL(url);
+    return protocol === "https:" && (hostname === "client.rum" || hostname.startsWith("client.rum."));
+  } catch {
+    return false;
+  }
+}
+
 export const test = base.extend({
   // Respect project/test use: options by applying contextOptions and explicitly enabling recordVideo
   context: async ({ browser, contextOptions }, use, testInfo) => {
@@ -13,7 +22,7 @@ export const test = base.extend({
       const url = route.request().url();
       // block RUM/ GA / gtag / GTM endpoints
       if (
-        url.startsWith("https://client.rum") ||
+        isRumHost(url) ||
         url.startsWith("https://www.google-analytics.com/g/collect") ||
         url.startsWith("https://www.googletagmanager.com/") ||
         url.includes("analytics.js") ||
