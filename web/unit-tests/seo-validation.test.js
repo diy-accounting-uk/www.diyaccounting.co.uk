@@ -167,3 +167,14 @@ describe("Structured data validation", () => {
     expect(org, "Should have an Organization JSON-LD block").toBeTruthy();
   });
 });
+
+describe("Canonical link validation", () => {
+  const htmlFiles = fs.readdirSync(site.dir).filter((f) => f.endsWith(".html"));
+  for (const file of htmlFiles) {
+    it(`${file} has a canonical link on the apex domain`, () => {
+      const html = readFile(path.join(site.dir, file));
+      const urlPath = file === "index.html" ? "/" : `/${file}`;
+      expect(html).toContain(`<link rel="canonical" href="${site.domain}${urlPath}" />`);
+    });
+  }
+});

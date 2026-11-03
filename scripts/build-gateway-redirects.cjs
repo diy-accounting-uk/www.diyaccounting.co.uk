@@ -99,6 +99,8 @@ function handler(event) {
   var qs = request.querystring;
   var host = (request.headers.host && request.headers.host.value) || '';
 
+  var isWww = host === 'www.diyaccounting.co.uk';
+
   // Detect environment from Host header
   var isCI = host.indexOf('ci-') === 0;
 
@@ -161,6 +163,9 @@ function handler(event) {
     }
     // Self-target means rewrite URI (no external redirect)
     if (rule.t === 'self') {
+      if (isWww) {
+        return wwwToApex(rule.to);
+      }
       request.uri = rule.to;
       return request;
     }
@@ -185,7 +190,34 @@ function handler(event) {
     };
   }
 
-  // 4. Pass through to origin (index.html, about.html, etc.)
+  // 4. www host: any path with no rule above answers 301 to the apex, path and query kept
+  function wwwToApex(path) {
+    var parts = [];
+    for (var name in qs) {
+      var entry = qs[name];
+      if (entry.multiValue) {
+        for (var m = 0; m < entry.multiValue.length; m++) {
+          parts.push(name + '=' + entry.multiValue[m].value);
+        }
+      } else {
+        parts.push(name + (entry.value === '' ? '' : '=' + entry.value));
+      }
+    }
+    return {
+      statusCode: 301,
+      statusDescription: 'Moved Permanently',
+      headers: {
+        'location': { value: 'https://diyaccounting.co.uk' + path + (parts.length ? '?' + parts.join('&') : '') },
+        'cache-control': { value: 'max-age=86400' }
+      }
+    };
+  }
+
+  if (isWww) {
+    return wwwToApex(uri);
+  }
+
+  // 5. Pass through to origin (index.html, about.html, etc.)
   return request;
 }
 `;
