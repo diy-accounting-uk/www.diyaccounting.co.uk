@@ -90,6 +90,31 @@ class GatewayStackTest {
     }
 
     @Test
+    void redirectFunctionRunsOnViewerRequestWhenHttpsOnly(@TempDir Path tempDir) throws IOException {
+        Path publicDir = writeDocRoot(tempDir);
+        Files.writeString(
+                tempDir.resolve("redirect-function.js"),
+                "function handler(event) { if (event.request.headers.host.value === 'www.diyaccounting.co.uk') {"
+                        + " return { statusCode: 301 }; } return event.request; }");
+        Template template = synth("prod", publicDir, PROD_DOMAIN_NAMES);
+
+        template.resourceCountIs("AWS::CloudFront::Function", 1);
+        template.hasResourceProperties(
+                "AWS::CloudFront::Distribution",
+                Match.objectLike(Map.of(
+                        "DistributionConfig",
+                        Match.objectLike(Map.of(
+                                "Aliases",
+                                Match.arrayWith(List.of("diyaccounting.co.uk", "www.diyaccounting.co.uk")),
+                                "DefaultCacheBehavior",
+                                Match.objectLike(Map.of(
+                                        "ViewerProtocolPolicy",
+                                        "redirect-to-https",
+                                        "FunctionAssociations",
+                                        Match.arrayWith(List.of(Match.objectLike(Map.of("EventType", "viewer-request")))))))))));
+    }
+
+    @Test
     void identityPoolAllowsUnauthenticatedIdentities(@TempDir Path tempDir) throws IOException {
         Path publicDir = writeDocRoot(tempDir);
         Template template = synth("ci", publicDir, CI_DOMAIN_NAMES);
