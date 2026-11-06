@@ -202,11 +202,11 @@ public class GatewayStack extends Stack {
                 .securityHeadersBehavior(ResponseSecurityHeadersBehavior.builder()
                         .contentSecurityPolicy(ResponseHeadersContentSecurityPolicy.builder()
                                 .contentSecurityPolicy("default-src 'self'; "
-                                        + "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://client.rum.us-east-1.amazonaws.com; "
+                                        + "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; "
                                         + "style-src 'self' 'unsafe-inline'; "
                                         + "img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com; "
                                         + "font-src 'self'; "
-                                        + "connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com "
+                                        + "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://stats.g.doubleclick.net https://www.googletagmanager.com "
                                         + "https://dataplane.rum.us-east-1.amazonaws.com https://cognito-identity.us-east-1.amazonaws.com https://sts.us-east-1.amazonaws.com; "
                                         + "frame-ancestors 'none'; "
                                         + "form-action 'self';")

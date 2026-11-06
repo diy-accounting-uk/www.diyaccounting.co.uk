@@ -101,7 +101,7 @@ describe("web/www.diyaccounting.co.uk/public/lib/analytics.js", () => {
     expect(global.window.AwsRumClient).toBeDefined();
     expect(global.window.AwsRumClient.i).toBe(FAKE_RUM_CONFIG.appMonitorId);
 
-    const cwrScript = headScripts.find((el) => el.src === "https://client.rum.us-east-1.amazonaws.com/1.25.0/cwr.js");
+    const cwrScript = headScripts.find((el) => el.src === "/lib/cwr-1.25.0.js");
     expect(cwrScript).toBeDefined();
   });
 });

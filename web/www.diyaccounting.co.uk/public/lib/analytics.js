@@ -43,6 +43,9 @@ function hasAnalyticsConsent() {
   }
 }
 
+// The RUM client is served from this origin. The page sends Cross-Origin-Embedder-Policy:
+// require-corp, and the AWS client host sends neither a CORP nor a CORS header, so a
+// cross-origin load of it is blocked.
 function initRum() {
   if (window.__RUM_INIT_DONE__) return;
   if (!hasAnalyticsConsent()) return;
@@ -65,7 +68,7 @@ function initRum() {
       console.warn("Failed to load RUM client:", e);
     };
     document.head.appendChild(z);
-  })("cwr", c.appMonitorId, "0.1.0", c.region, "https://client.rum.us-east-1.amazonaws.com/1.25.0/cwr.js", {
+  })("cwr", c.appMonitorId, "0.1.0", c.region, "/lib/cwr-1.25.0.js", {
     sessionSampleRate: c.sessionSampleRate ?? 1,
     guestRoleArn: c.guestRoleArn,
     identityPoolId: c.identityPoolId,

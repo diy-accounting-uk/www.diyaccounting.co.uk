@@ -50,7 +50,7 @@ async function routeRumConfig(page) {
 // initRum() appends the real cwr client script once consent is granted;
 // abort it so a passing test never depends on reaching AWS.
 async function blockRumClientScript(page) {
-  await page.route("https://client.rum.us-east-1.amazonaws.com/**", (route) => route.abort());
+  await page.route("**/lib/cwr-1.25.0.js", (route) => route.abort());
 }
 
 test.describe("analytics.js — RUM loader", () => {

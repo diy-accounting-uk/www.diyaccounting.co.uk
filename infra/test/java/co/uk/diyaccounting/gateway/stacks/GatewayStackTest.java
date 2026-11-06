@@ -3,6 +3,7 @@
 
 package co.uk.diyaccounting.gateway.stacks;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -152,7 +153,18 @@ class GatewayStackTest {
         assertTrue(contentSecurityPolicy.contains("dataplane.rum.us-east-1.amazonaws.com"));
         assertTrue(contentSecurityPolicy.contains("cognito-identity.us-east-1.amazonaws.com"));
         assertTrue(contentSecurityPolicy.contains("sts.us-east-1.amazonaws.com"));
-        assertTrue(contentSecurityPolicy.contains("client.rum.us-east-1.amazonaws.com"));
+        assertFalse(contentSecurityPolicy.contains("client.rum.us-east-1.amazonaws.com"));
+    }
+
+    @Test
+    void contentSecurityPolicyCoversTheGoogleAnalyticsCollectHosts(@TempDir Path tempDir) throws IOException {
+        Path publicDir = writeDocRoot(tempDir);
+        Template template = synth("ci", publicDir, CI_DOMAIN_NAMES);
+
+        String contentSecurityPolicy = contentSecurityPolicyFrom(template);
+
+        assertTrue(contentSecurityPolicy.contains("https://*.analytics.google.com"));
+        assertTrue(contentSecurityPolicy.contains("https://stats.g.doubleclick.net"));
     }
 
     @Test
