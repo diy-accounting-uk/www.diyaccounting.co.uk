@@ -242,7 +242,7 @@ class GatewayStackTest {
                         Match.objectLike(Map.of(
                                 "Statement",
                                 List.of(Map.of(
-                                        "Action", "cloudwatch:GetMetricWidgetImage",
+                                        "Action", List.of("cloudwatch:GetMetricData", "cloudwatch:GetMetricWidgetImage"),
                                         "Effect", "Allow",
                                         "Resource", "*")))))));
         prodTemplate.hasOutput("ConsoleCaptureRoleArn", Match.anyValue());
