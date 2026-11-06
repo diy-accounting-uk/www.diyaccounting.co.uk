@@ -11,3 +11,4 @@ cdk-gateway.out/
 LICENSE
 pom.xml
 package-lock.json
+web/www.diyaccounting.co.uk/public/lib/cwr-*.js
