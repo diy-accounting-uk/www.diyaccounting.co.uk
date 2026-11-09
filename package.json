@@ -5,6 +5,7 @@
   "description": "Gateway static site for diyaccounting.co.uk",
   "private": true,
   "scripts": {
+    "prepare": "node .githooks/install.mjs",
     "postinstall": "patch-package",
     "start": "npx http-server web/www.diyaccounting.co.uk/public -p 3000",
     "build": "./mvnw clean verify",
