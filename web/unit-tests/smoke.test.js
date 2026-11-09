@@ -85,6 +85,15 @@ describe("Smoke test — local server renders pages", () => {
     expect(text).toContain("User-agent");
   });
 
+  it("microsoft-identity-association.json returns JSON naming the Submit application", async () => {
+    const res = await fetch(`${baseUrl}/.well-known/microsoft-identity-association.json`);
+    expect(res.status).toBe(200);
+    expect(res.headers.get("content-type")).toContain("application/json");
+    expect(await res.json()).toEqual({
+      associatedApplications: [{ applicationId: "4de37573-a5fb-431b-b3c5-0a4563ca529d" }],
+    });
+  });
+
   it("gateway.css returns 200", async () => {
     const res = await fetch(`${baseUrl}/gateway.css`);
     expect(res.status).toBe(200);
