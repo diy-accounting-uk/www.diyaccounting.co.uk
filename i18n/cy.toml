@@ -1,0 +1,184 @@
+# SPDX-License-Identifier: LicenseRef-PolyForm-Internal-Use-1.0.0
+# Copyright (C) 2006-2026 DIY Accounting Limited
+
+# The Welsh text of the pages under web/www.diyaccounting.co.uk/public/cy/, built by scripts/build-welsh-pages.mjs.
+# [strings."<id>"] holds the Welsh for the English element marked data-i18n="<id>" (or data-i18n-<attr>="<id>").
+# hash is the hash of that English text. When the English changes, the build and npm test list the entry as stale
+# with the new hash: translate the new English, then put the new hash here.
+# Product and company names (DIY Accounting, DIY Accounting Submit, DIYA-GL, British Rail and the like) stay in English. Text that HMRC sends back stays as HMRC sends it.
+
+[strings."common.skip-link"]
+hash = "c887f134c26e"
+cy = '''Skip to main content'''
+
+[strings."common.privacy"]
+hash = "a4cc6bc01a92"
+cy = '''privacy'''
+
+[strings."common.terms"]
+hash = "51d2361f4fae"
+cy = '''terms'''
+
+[strings."common.accessibility"]
+hash = "714db89df42b"
+cy = '''accessibility'''
+
+[strings."common.licence"]
+hash = "6fabda764f6c"
+cy = '''Free to use, source available.'''
+
+[strings."index.title"]
+hash = "4bdf8942e89d"
+cy = '''DIY Accounting - Accounting Software for UK Small Businesses'''
+
+[strings."index.description"]
+hash = "0b42d32e635d"
+cy = '''DIY Accounting provides accounting software for UK small businesses. Submit VAT returns to HMRC under Making Tax Digital, or use our Excel bookkeeping spreadsheets.'''
+
+[strings."index.products-label"]
+hash = "4edc8bfafc6b"
+cy = '''Products'''
+
+[strings."index.submit-href"]
+hash = "a9453adfbb5d"
+cy = '''https://submit.diyaccounting.co.uk'''
+
+[strings."index.submit-subtitle"]
+hash = "863e14503f49"
+cy = '''Submit UK VAT returns to HMRC under Making Tax Digital (MTD)'''
+
+[strings."index.spreadsheets-subtitle"]
+hash = "53da3227911c"
+cy = '''Excel bookkeeping and accounting software for UK small businesses'''
+
+[strings."index.diya-gl-subtitle"]
+hash = "6a5395dab636"
+cy = '''Your books, free in the browser'''
+
+[strings."index.marketing-title"]
+hash = "563b76eeb386"
+cy = '''Marketing resources'''
+
+[strings."index.marketing-subtitle"]
+hash = "308b2b5b2f3e"
+cy = '''Brand guides and shareable posts for each DIY Accounting product'''
+
+[strings."index.developer-title"]
+hash = "f6236eddb561"
+cy = '''Developer resources'''
+
+[strings."index.developer-subtitle"]
+hash = "921d9c0cb25a"
+cy = '''API docs, MCP tools, libraries and test reports'''
+
+[strings."index.company-subtitle"]
+hash = "0f668e70820d"
+cy = '''Company information, directors, history and contact details'''
+
+[strings."index.summary-1"]
+hash = "2e5fb7d63e35"
+cy = '''DIY Accounting Limited has been providing accounting software for UK small businesses since 2006. Founded by Terry Cartwright, a Chartered Management Accountant, the company is now managed by his family.'''
+
+[strings."index.summary-2"]
+hash = "060874432a8a"
+cy = '''Our products are designed to be straightforward and practical, giving small businesses the tools they need without unnecessary complexity.'''
+
+[strings."about.title"]
+hash = "6902c9d606f0"
+cy = '''About - DIY Accounting Limited'''
+
+[strings."about.description"]
+hash = "8351b1b8f2c2"
+cy = '''About DIY Accounting Limited - company information, directors, history, and contact details. Founded by Terry Cartwright, now managed by his family.'''
+
+[strings."about.home"]
+hash = "3a78695388b3"
+cy = '''Home'''
+
+[strings."about.about-heading"]
+hash = "7195ccfc9db0"
+cy = '''About DIY Accounting'''
+
+[strings."about.about-1"]
+hash = "6d247c97867c"
+cy = '''DIY Accounting Limited is managed by the family of founder Terry Cartwright. Since January 2010, the team has taken over day-to-day operations while maintaining the standards of ease of use and personal customer service that Terry established.'''
+
+[strings."about.about-2"]
+hash = "bbdc55179d50"
+cy = '''The company is known for straightforward accounting spreadsheets designed by a Chartered Management Accountant, providing small businesses with the tools they need without unnecessary complexity.'''
+
+[strings."about.director-1"]
+hash = "da6efee4c0c1"
+cy = '''<strong>Antony Cartwright</strong> &mdash; Director'''
+
+[strings."about.director-2"]
+hash = "344d0136777d"
+cy = '''<strong>Jane Grundy</strong> &mdash; Director'''
+
+[strings."about.director-3"]
+hash = "b5ac297a8bc7"
+cy = '''<strong>Samantha Cartwright</strong> &mdash; Director'''
+
+[strings."about.about-more"]
+hash = "8859ed9118c4"
+cy = '''Read more about DIY Accounting'''
+
+[strings."about.about-more-1"]
+hash = "8e48100f20e7"
+cy = '''DIY Accounting has always been recognised for its ease of use and personal customer service. The current team includes a dedicated marketing executive and customer service support, along with an online marketing consultant and accounts assistant providing technical support.'''
+
+[strings."about.about-more-2"]
+hash = "aedccc4afa01"
+cy = '''All accounting and payroll software was personally designed by Terry Cartwright. He would answer every customer question about accounting software, bookkeeping, or payroll software himself. The team now aims to provide the same high quality of care and expertise that Terry provided, and success is measured by customer feedback.'''
+
+[strings."about.about-more-3"]
+hash = "0d184c15ebcb"
+cy = '''If you think we can improve our product or service, we welcome suggestions. We are committed to continuing the legacy of accessible, reliable accounting tools for UK small businesses.'''
+
+[strings."about.history-heading"]
+hash = "0e7696009337"
+cy = '''History'''
+
+[strings."about.history-1"]
+hash = "d2305b4ee951"
+cy = '''DIY Accounting was founded by Terry Cartwright, a Chartered Management Accountant (ACMA) and Chartered Company Secretary (ACIS), who began designing payroll and accounting systems on Excel spreadsheets in 2006.'''
+
+[strings."about.history-2"]
+hash = "b40843d0fbba"
+cy = '''Terry passed away in December 2009 and the company is now managed by his children: Antony, Jane, Samantha, Lindsey, and Daniel.'''
+
+[strings."about.founder-more"]
+hash = "68c4c07af981"
+cy = '''Read more about the founder'''
+
+[strings."about.founder-1"]
+hash = "e750e9c94fe5"
+cy = '''Terry Cartwright qualified as a Chartered Management Accountant (ACMA) in 1971 and went on to design a revenue budgeting system for British Rail. He served as Management and Works Accountant at New World Gas Cookers before qualifying as a Chartered Company Secretary (ACIS).'''
+
+[strings."about.founder-2"]
+hash = "1130a7b58134"
+cy = '''At British Steel he was promoted to Head of Finance and Administration for the Refractories division. He later worked in Saudi Arabia as Chief Accountant for an American corporation, and on returning to the UK became Chief Accountant at Dunlop Industrial Hose.'''
+
+[strings."about.founder-3"]
+hash = "6ee074d8581f"
+cy = '''In the early 1980s Terry started his own retail and wholesale company, growing it to multiple outlets with turnover approaching &pound;1 million. In the early 1990s he returned to accountancy, working on a European sales accounting system, Oracle software implementations, and a treasury management system for a UK bank, before serving as Finance Director for a communications company.'''
+
+[strings."about.founder-4"]
+hash = "633442a3846c"
+cy = '''Semi-retiring around 2000, Terry pursued ornithology alongside maintaining financial accounts for industrial companies. In 2006 he started DIY Accounting, applying his decades of experience to designing practical payroll and accounting systems on Excel spreadsheets. As a Chartered Company Secretary he also acted as a company formation agent.'''
+
+[strings."about.contact-heading"]
+hash = "2b5c3d26721a"
+cy = '''Contact'''
+
+[strings."about.address"]
+hash = "7b0cfd79da45"
+cy = '''<strong>DIY Accounting Limited</strong><br /> 37 Sutherland Avenue<br /> Leeds<br /> LS8 1BY<br /> United Kingdom'''
+
+[strings."about.phone"]
+hash = "6cbaded5e5a1"
+cy = '''Phone: 0845 0756015 (UK)<br /> Phone: +44 845 075 6015 (International)<br /> <small>Messages are transcribed for part-time staff</small>'''
+
+[strings."about.company-number"]
+hash = "cf1b7834bba0"
+cy = '''Registered in England and Wales &mdash; Company Number: <a href="https://find-and-update.company-information.service.gov.uk/company/06846849" target="_blank" rel="noopener" >06846849</a >'''

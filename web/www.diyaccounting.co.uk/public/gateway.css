@@ -223,6 +223,36 @@ main {
 }
 
 /* ============================================================
+   Language switch (English / Cymraeg)
+   ============================================================ */
+
+.language-switch {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 0.95em;
+}
+
+.language-switch > * + *::before {
+  content: "|";
+  margin-right: var(--spacing-sm);
+  color: var(--color-text-muted);
+}
+
+.language-switch [aria-current] {
+  font-weight: var(--font-weight-bold);
+}
+
+.language-switch a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--color-brand-primary);
+  text-decoration: underline;
+}
+
+/* ============================================================
    Company Summary (index.html)
    ============================================================ */
 
