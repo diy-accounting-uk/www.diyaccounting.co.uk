@@ -182,6 +182,12 @@ function welshLanguageSwitch(page) {
   );
 }
 
+function welshServicesBlock(catalogue) {
+  const entry = catalogue.shared["hmrc-welsh-services"];
+  if (!entry || !entry.cy) throw new Error("shared.hmrc-welsh-services: no Welsh text in i18n/cy.toml");
+  return `<aside class="welsh-services" aria-labelledby="welshServicesHeading" data-welsh-services>${entry.cy.trim()}</aside>`;
+}
+
 export async function renderWelshPage(page, catalogue = loadCatalogue(), pages = WELSH_PAGES) {
   const english = readEnglishPage(page);
   for (const { hreflang, href } of expectedAlternates(page)) {
@@ -205,6 +211,7 @@ export async function renderWelshPage(page, catalogue = loadCatalogue(), pages =
   });
   html = replaceOnce(html, /(<link rel="canonical" href=")[^"]*(")/, `$1${welshUrl(page)}$2`, `canonical link in ${page.en}`);
   html = html.replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${welshUrl(page)}$2`);
+  html = replaceOnce(html, /<\/main>/, `${welshServicesBlock(catalogue)}</main>`, `</main> in ${page.en}`);
   html = html.replace(/(\s(?:href|src)=")([^"]*)(")/g, (whole, start, url, end) => `${start}${relocate(url, pages)}${end}`);
   html = html.replace(
     /(Copyright \(C\) 2006-2026 DIY Accounting Limited -->)/,

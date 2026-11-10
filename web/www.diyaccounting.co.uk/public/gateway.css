@@ -253,6 +253,39 @@ main {
 }
 
 /* ============================================================
+   HMRC's Welsh services (every Welsh page)
+   ============================================================ */
+
+.welsh-services {
+  background: var(--color-surface);
+  border-left: 4px solid var(--color-brand-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  margin-top: var(--spacing-xl);
+}
+
+.welsh-services h2 {
+  color: var(--color-brand-primary);
+  font-size: 1.3em;
+  margin-bottom: var(--spacing-sm);
+}
+
+.welsh-services p {
+  line-height: 1.6;
+  margin-bottom: var(--spacing-sm);
+}
+
+.welsh-services p:last-child {
+  margin-bottom: 0;
+}
+
+.welsh-services .welsh-services-note {
+  color: var(--color-text-secondary);
+  font-size: 0.9em;
+}
+
+/* ============================================================
    Company Summary (index.html)
    ============================================================ */
 
