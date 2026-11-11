@@ -80,7 +80,7 @@ describe.each(WELSH_PAGES)("Welsh page $cy", (page) => {
   });
 
   it("switches language to and from the same page", () => {
-    expect(english).toMatch(new RegExp(`<a href="${page.cy}" lang="cy" hreflang="cy">Cymraeg</a>`));
+    expect(english).toContain(`<a href="${page.cy}" lang="cy" hreflang="cy">Cymraeg</a>`);
     const englishPath = page.en === "index.html" ? "/" : `/${page.en}`;
     expect(welsh).toContain(`<a href="${englishPath}" lang="en-GB" hreflang="en-GB">English</a>`);
     expect(welsh).toContain('<span aria-current="true" lang="cy">Cymraeg</span>');
@@ -96,10 +96,10 @@ describe.each(WELSH_PAGES)("Welsh page $cy", (page) => {
   it("is listed in sitemap.xml with the same alternates", () => {
     const sitemap = read("sitemap.xml");
     for (const loc of [page.enUrl, welshUrl(page)]) {
-      const entry = sitemap.match(new RegExp(`<url>\\s*<loc>${loc.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}</loc>([\\s\\S]*?)</url>`));
-      expect(entry, loc).not.toBeNull();
+      const entry = sitemap.split("<url>").find((block) => block.includes(`<loc>${loc}</loc>`));
+      expect(entry, loc).toBeDefined();
       for (const { hreflang, href } of expectedAlternates(page)) {
-        expect(entry[1]).toContain(`<xhtml:link rel="alternate" hreflang="${hreflang}" href="${href}" />`);
+        expect(entry.split("</url>")[0]).toContain(`<xhtml:link rel="alternate" hreflang="${hreflang}" href="${href}" />`);
       }
     }
   });
