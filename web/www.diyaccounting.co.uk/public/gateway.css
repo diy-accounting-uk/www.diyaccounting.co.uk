@@ -223,6 +223,69 @@ main {
 }
 
 /* ============================================================
+   Language switch (English / Cymraeg)
+   ============================================================ */
+
+.language-switch {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 0.95em;
+}
+
+.language-switch > * + *::before {
+  content: "|";
+  margin-right: var(--spacing-sm);
+  color: var(--color-text-muted);
+}
+
+.language-switch [aria-current] {
+  font-weight: var(--font-weight-bold);
+}
+
+.language-switch a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--color-brand-primary);
+  text-decoration: underline;
+}
+
+/* ============================================================
+   HMRC's Welsh services (every Welsh page)
+   ============================================================ */
+
+.welsh-services {
+  background: var(--color-surface);
+  border-left: 4px solid var(--color-brand-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  margin-top: var(--spacing-xl);
+}
+
+.welsh-services h2 {
+  color: var(--color-brand-primary);
+  font-size: 1.3em;
+  margin-bottom: var(--spacing-sm);
+}
+
+.welsh-services p {
+  line-height: 1.6;
+  margin-bottom: var(--spacing-sm);
+}
+
+.welsh-services p:last-child {
+  margin-bottom: 0;
+}
+
+.welsh-services .welsh-services-note {
+  color: var(--color-text-secondary);
+  font-size: 0.9em;
+}
+
+/* ============================================================
    Company Summary (index.html)
    ============================================================ */
 

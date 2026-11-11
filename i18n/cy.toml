@@ -1,0 +1,237 @@
+# SPDX-License-Identifier: LicenseRef-PolyForm-Internal-Use-1.0.0
+# Copyright (C) 2006-2026 DIY Accounting Limited
+
+# The Welsh text of the pages under web/www.diyaccounting.co.uk/public/cy/, built by scripts/build-welsh-pages.mjs.
+# [strings."<id>"] holds the Welsh for the English element marked data-i18n="<id>" (or data-i18n-<attr>="<id>").
+# hash is the hash of that English text. When the English changes, the build and npm test list the entry as stale
+# with the new hash: translate the new English, then put the new hash here.
+# [shared."<id>"] holds Welsh-only text that every Welsh page carries.
+# Product and company names (DIY Accounting, DIY Accounting Submit, DIYA-GL, British Rail and the like) stay in English. Text that HMRC sends back stays as HMRC sends it.
+#
+# Glossary: HMRC's own Welsh terms, from the gov.uk Welsh pages.
+#   HMRC                          Cyllid a Thollau EF (CThEF)
+#   VAT                           Treth ar Werth (TAW)
+#   VAT return                    Ffurflen TAW
+#   VAT registration number       rhif cofrestru TAW
+#   VAT-registered business       busnes sydd wedi'i gofrestru ar gyfer TAW
+#   Income Tax                    Treth Incwm
+#   Making Tax Digital            Troi Treth yn Ddigidol
+#   Making Tax Digital for VAT    Troi Treth yn Ddigidol ar gyfer TAW
+#   Self Assessment               Hunanasesiad
+#   tax return                    Ffurflen Dreth
+#   PAYE                          TWE
+#   National Insurance            Yswiriant Gwladol
+#   customs, excise               tollau, ecséis
+#   sole traders and landlords    unig fasnachwyr a landlordiaid
+#   qualifying income             incwm cymhwysol
+#   tax year                      blwyddyn dreth
+#   quarterly update              diweddariad chwarterol
+#   software                      meddalwedd
+#   compatible software           meddalwedd sy'n cydweddu
+#   bridging software             meddalwedd bontio
+#   digital records               cofnodion digidol
+#   obligations                   rhwymedigaethau
+#   agent                         asiant
+#   Government Gateway user ID    Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth
+#   Companies House               Tŷ'r Cwmnïau
+#   confirmation statement        datganiad cadarnhau
+#   helpline                      llinell gymorth
+#   bank holidays                 gwyliau banc
+# Our own terms:
+#   day pass                      tocyn diwrnod
+#   pass link                     dolen tocyn
+#   token                         credyd (with "tokens" in brackets where the English screen says tokens)
+#   VAT submission                cyflwyniad TAW
+#   sandbox                       amgylchedd prawf (sandbox)
+#   preview                       rhagolwg (preview)
+# Sources: https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-vat.cy
+#          https://www.gov.uk/guidance/choose-the-right-software-for-making-tax-digital-for-income-tax.cy
+#          https://www.gov.uk/government/news/sole-traders-and-landlords-earning-more-than-30000-urged-to-act-now.cy
+#          https://www.gov.uk/government/organisations/hm-revenue-customs/contact/welsh-language-helplines (updated 19 Rhagfyr 2025)
+#          https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-customs-and-excise-and-duties-enquiries-for-welsh-speaking-customers (updated 19 Rhagfyr 2025)
+
+[shared."hmrc-welsh-services"]
+cy = '''
+<h2 id="welshServicesHeading">Gwasanaethau Cymraeg CThEF</h2>
+<p>Mae sgriniau a negeseuon ar-lein CThEF ar gael yn Gymraeg. Pan fydd DIY Accounting Submit yn eich anfon i CThEF i fewngofnodi, dewiswch ‘Cymraeg’ ar dudalen CThEF.</p>
+<p>Yn DIY Accounting Submit, gallwch weld adborth HMRC Assist ar eich Ffurflen TAW yn Gymraeg.</p>
+<p>Llinell gymorth Gymraeg CThEF ar gyfer Treth Incwm, Hunanasesiad, Yswiriant Gwladol a TWE: <a href="tel:+443002001900">0300 200 1900</a>. Ar gyfer TAW, tollau ac ecséis: <a href="tel:+443002003705">0300 200 3705</a>. Mae’r ddwy linell ar agor o ddydd Llun i ddydd Gwener, 8:30am i 5pm, ac ar gau ar wyliau banc.</p>
+<p><a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/welsh-language-helplines">Llinellau cymorth Cymraeg CThEF ar GOV.UK</a></p>
+<p class="welsh-services-note">Cyfieithiad o’n tudalen Saesneg yw’r dudalen hon. Mae’r rhan fwyaf o’n gwefannau eraill yn Saesneg.</p>
+'''
+
+[strings."common.skip-link"]
+hash = "c887f134c26e"
+cy = '''Neidio i’r prif gynnwys'''
+
+[strings."common.privacy"]
+hash = "a4cc6bc01a92"
+cy = '''preifatrwydd'''
+
+[strings."common.terms"]
+hash = "51d2361f4fae"
+cy = '''telerau'''
+
+[strings."common.accessibility"]
+hash = "714db89df42b"
+cy = '''hygyrchedd'''
+
+[strings."common.licence"]
+hash = "6fabda764f6c"
+cy = '''Am ddim i’w ddefnyddio, cod ffynhonnell ar gael.'''
+
+[strings."index.title"]
+hash = "4bdf8942e89d"
+cy = '''DIY Accounting - Meddalwedd cyfrifyddu i fusnesau bach yn y DU'''
+
+[strings."index.description"]
+hash = "0b42d32e635d"
+cy = '''Mae DIY Accounting yn darparu meddalwedd cyfrifyddu i fusnesau bach yn y DU. Cyflwynwch Ffurflenni TAW i CThEF drwy’r cynllun Troi Treth yn Ddigidol, neu defnyddiwch ein taenlenni Excel ar gyfer cadw cyfrifon.'''
+
+[strings."index.products-label"]
+hash = "4edc8bfafc6b"
+cy = '''Cynhyrchion'''
+
+[strings."index.submit-href"]
+hash = "a9453adfbb5d"
+cy = '''https://submit.diyaccounting.co.uk/cy/get-started.html'''
+
+[strings."index.submit-subtitle"]
+hash = "863e14503f49"
+cy = '''Cyflwyno Ffurflenni TAW y DU i CThEF drwy’r cynllun Troi Treth yn Ddigidol'''
+
+[strings."index.spreadsheets-subtitle"]
+hash = "53da3227911c"
+cy = '''Taenlenni Excel ar gyfer cadw cyfrifon a chyfrifyddu i fusnesau bach yn y DU'''
+
+[strings."index.diya-gl-subtitle"]
+hash = "6a5395dab636"
+cy = '''Eich cyfrifon, am ddim yn y porwr'''
+
+[strings."index.marketing-title"]
+hash = "563b76eeb386"
+cy = '''Adnoddau marchnata'''
+
+[strings."index.marketing-subtitle"]
+hash = "308b2b5b2f3e"
+cy = '''Canllawiau brand a negeseuon i’w rhannu ar gyfer pob un o gynhyrchion DIY Accounting'''
+
+[strings."index.developer-title"]
+hash = "f6236eddb561"
+cy = '''Adnoddau datblygwyr'''
+
+[strings."index.developer-subtitle"]
+hash = "921d9c0cb25a"
+cy = '''Dogfennau API, offer MCP, llyfrgelloedd ac adroddiadau profion'''
+
+[strings."index.company-subtitle"]
+hash = "0f668e70820d"
+cy = '''Gwybodaeth am y cwmni, cyfarwyddwyr, hanes a manylion cyswllt'''
+
+[strings."index.summary-1"]
+hash = "2e5fb7d63e35"
+cy = '''Mae DIY Accounting Limited wedi darparu meddalwedd cyfrifyddu i fusnesau bach yn y DU ers 2006. Sefydlwyd y cwmni gan Terry Cartwright, Cyfrifydd Rheoli Siartredig, ac erbyn hyn mae ei deulu’n ei reoli.'''
+
+[strings."index.summary-2"]
+hash = "060874432a8a"
+cy = '''Mae ein cynhyrchion yn syml ac yn ymarferol. Maen nhw’n rhoi i fusnesau bach yr offer sydd eu hangen arnyn nhw, heb gymhlethdod diangen.'''
+
+[strings."about.title"]
+hash = "6902c9d606f0"
+cy = '''Amdanom ni - DIY Accounting Limited'''
+
+[strings."about.description"]
+hash = "8351b1b8f2c2"
+cy = '''Am DIY Accounting Limited - gwybodaeth am y cwmni, cyfarwyddwyr, hanes a manylion cyswllt. Sefydlwyd gan Terry Cartwright, ac erbyn hyn mae ei deulu’n ei reoli.'''
+
+[strings."about.home"]
+hash = "3a78695388b3"
+cy = '''Hafan'''
+
+[strings."about.about-heading"]
+hash = "7195ccfc9db0"
+cy = '''Am DIY Accounting'''
+
+[strings."about.about-1"]
+hash = "6d247c97867c"
+cy = '''Teulu’r sylfaenydd, Terry Cartwright, sy’n rheoli DIY Accounting Limited. Ers mis Ionawr 2010, y tîm sy’n rhedeg y gwaith o ddydd i ddydd, ac mae’n cadw’r safonau a osododd Terry: meddalwedd sy’n hawdd ei defnyddio a gwasanaeth personol i gwsmeriaid.'''
+
+[strings."about.about-2"]
+hash = "bbdc55179d50"
+cy = '''Mae’r cwmni’n adnabyddus am daenlenni cyfrifyddu syml a gynlluniwyd gan Gyfrifydd Rheoli Siartredig. Maen nhw’n rhoi i fusnesau bach yr offer sydd eu hangen arnyn nhw, heb gymhlethdod diangen.'''
+
+[strings."about.director-1"]
+hash = "da6efee4c0c1"
+cy = '''<strong>Antony Cartwright</strong> &mdash; Cyfarwyddwr'''
+
+[strings."about.director-2"]
+hash = "344d0136777d"
+cy = '''<strong>Jane Grundy</strong> &mdash; Cyfarwyddwr'''
+
+[strings."about.director-3"]
+hash = "b5ac297a8bc7"
+cy = '''<strong>Samantha Cartwright</strong> &mdash; Cyfarwyddwr'''
+
+[strings."about.about-more"]
+hash = "8859ed9118c4"
+cy = '''Darllen mwy am DIY Accounting'''
+
+[strings."about.about-more-1"]
+hash = "8e48100f20e7"
+cy = '''Mae DIY Accounting wedi bod yn adnabyddus erioed am feddalwedd sy’n hawdd ei defnyddio ac am wasanaeth personol i gwsmeriaid. Mae’r tîm presennol yn cynnwys swyddog marchnata a chymorth gwasanaeth cwsmeriaid, ynghyd ag ymgynghorydd marchnata ar-lein a chynorthwyydd cyfrifon sy’n rhoi cymorth technegol.'''
+
+[strings."about.about-more-2"]
+hash = "aedccc4afa01"
+cy = '''Terry Cartwright ei hun a gynlluniodd yr holl feddalwedd cyfrifyddu a chyflogres. Byddai’n ateb pob cwestiwn gan gwsmeriaid am feddalwedd cyfrifyddu, cadw cyfrifon neu feddalwedd cyflogres ei hun. Nod y tîm nawr yw rhoi’r un gofal ac arbenigedd o safon uchel ag a roddodd Terry, ac rydym yn mesur llwyddiant drwy adborth cwsmeriaid.'''
+
+[strings."about.about-more-3"]
+hash = "0d184c15ebcb"
+cy = '''Os ydych yn credu y gallwn wella ein cynnyrch neu ein gwasanaeth, rydym yn croesawu awgrymiadau. Rydym wedi ymrwymo i barhau â’r gwaith o ddarparu offer cyfrifyddu hygyrch a dibynadwy i fusnesau bach yn y DU.'''
+
+[strings."about.history-heading"]
+hash = "0e7696009337"
+cy = '''Hanes'''
+
+[strings."about.history-1"]
+hash = "d2305b4ee951"
+cy = '''Sefydlwyd DIY Accounting gan Terry Cartwright, Cyfrifydd Rheoli Siartredig (ACMA) ac Ysgrifennydd Cwmni Siartredig (ACIS). Dechreuodd gynllunio systemau cyflogres a chyfrifyddu ar daenlenni Excel yn 2006.'''
+
+[strings."about.history-2"]
+hash = "b40843d0fbba"
+cy = '''Bu farw Terry ym mis Rhagfyr 2009, ac erbyn hyn ei blant sy’n rheoli’r cwmni: Antony, Jane, Samantha, Lindsey a Daniel.'''
+
+[strings."about.founder-more"]
+hash = "68c4c07af981"
+cy = '''Darllen mwy am y sylfaenydd'''
+
+[strings."about.founder-1"]
+hash = "e750e9c94fe5"
+cy = '''Cymhwysodd Terry Cartwright fel Cyfrifydd Rheoli Siartredig (ACMA) yn 1971, ac aeth ymlaen i gynllunio system cyllidebu refeniw ar gyfer British Rail. Bu’n Gyfrifydd Rheoli a Gwaith yn New World Gas Cookers cyn cymhwyso fel Ysgrifennydd Cwmni Siartredig (ACIS).'''
+
+[strings."about.founder-2"]
+hash = "1130a7b58134"
+cy = '''Yn British Steel, cafodd ei ddyrchafu’n Bennaeth Cyllid a Gweinyddu yn yr adran Refractories. Yn ddiweddarach bu’n gweithio yn Saudi Arabia fel Prif Gyfrifydd i gorfforaeth Americanaidd. Ar ôl dod yn ôl i’r DU, daeth yn Brif Gyfrifydd yn Dunlop Industrial Hose.'''
+
+[strings."about.founder-3"]
+hash = "6ee074d8581f"
+cy = '''Ar ddechrau’r 1980au, dechreuodd Terry ei gwmni manwerthu a chyfanwerthu ei hun, a thyfodd y cwmni i sawl siop gyda throsiant o bron i &pound;1 miliwn. Ar ddechrau’r 1990au dychwelodd at gyfrifyddiaeth. Bu’n gweithio ar system cyfrifyddu gwerthiant Ewropeaidd, ar osod meddalwedd Oracle, ac ar system rheoli trysorlys i fanc yn y DU, cyn dod yn Gyfarwyddwr Cyllid i gwmni cyfathrebu.'''
+
+[strings."about.founder-4"]
+hash = "633442a3846c"
+cy = '''Pan hanner ymddeolodd tua 2000, dilynodd Terry ei ddiddordeb mewn adareg, a pharhaodd i gadw cyfrifon ariannol i gwmnïau diwydiannol. Yn 2006 dechreuodd DIY Accounting, a defnyddiodd ddegawdau o brofiad i gynllunio systemau cyflogres a chyfrifyddu ymarferol ar daenlenni Excel. Fel Ysgrifennydd Cwmni Siartredig, bu hefyd yn asiant ffurfio cwmnïau.'''
+
+[strings."about.contact-heading"]
+hash = "2b5c3d26721a"
+cy = '''Cysylltu â ni'''
+
+[strings."about.address"]
+hash = "7b0cfd79da45"
+cy = '''<strong>DIY Accounting Limited</strong><br /> 37 Sutherland Avenue<br /> Leeds<br /> LS8 1BY<br /> Y Deyrnas Unedig'''
+
+[strings."about.phone"]
+hash = "6cbaded5e5a1"
+cy = '''Ffôn: 0845 0756015 (DU)<br /> Ffôn: +44 845 075 6015 (rhyngwladol)<br /> <small>Mae negeseuon yn cael eu trawsgrifio ar gyfer staff rhan-amser</small>'''
+
+[strings."about.company-number"]
+hash = "cf1b7834bba0"
+cy = '''Cofrestrwyd yng Nghymru a Lloegr &mdash; Rhif y cwmni: <a href="https://find-and-update.company-information.service.gov.uk/company/06846849" target="_blank" rel="noopener">06846849</a>'''
