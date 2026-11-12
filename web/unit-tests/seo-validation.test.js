@@ -44,6 +44,34 @@ function parseRobotsTxt(content) {
   return directives;
 }
 
+// Helper: group robots.txt rules by the agents they name
+function parseRobotsGroups(content) {
+  const groups = [];
+  let current = null;
+  let lastWasAgent = false;
+  for (const raw of content.split("\n")) {
+    const line = raw.trim();
+    if (line.startsWith("#") || line === "") continue;
+    const [key, ...valueParts] = line.split(":");
+    const keyLower = key.toLowerCase().trim();
+    const value = valueParts.join(":").trim();
+    if (keyLower === "user-agent") {
+      if (!current || !lastWasAgent) {
+        current = { agents: [], allows: [], disallows: [] };
+        groups.push(current);
+      }
+      current.agents.push(value);
+      lastWasAgent = true;
+      continue;
+    }
+    lastWasAgent = false;
+    if (!current) continue;
+    if (keyLower === "allow") current.allows.push(value);
+    else if (keyLower === "disallow") current.disallows.push(value);
+  }
+  return groups;
+}
+
 // Helper: check if a path is disallowed by robots.txt rules
 function isDisallowed(urlPath, disallows) {
   return disallows.some((rule) => urlPath.startsWith(rule));
@@ -106,6 +134,47 @@ describe("Sitemap validation", () => {
 
 describe("robots.txt validation", () => {
   const robotsPath = path.join(site.dir, "robots.txt");
+
+  it("no named agent is disallowed from a sitemap URL", () => {
+    const groups = parseRobotsGroups(readFile(robotsPath));
+    const urls = extractSitemapUrls(readFile(path.join(site.dir, "sitemap.xml")));
+    const namedGroups = groups.filter((g) => !g.agents.includes("*"));
+    expect(namedGroups.length).toBeGreaterThan(0);
+    for (const group of namedGroups) {
+      for (const url of urls) {
+        expect(isDisallowed(new URL(url).pathname, group.disallows), `${group.agents.join(", ")} is disallowed from ${url}`).toBe(false);
+      }
+    }
+  });
+
+  it("names the search agents, the training agents and one content signal", () => {
+    const content = readFile(robotsPath);
+    const named = parseRobotsGroups(content).flatMap((g) => g.agents);
+    for (const agent of [
+      "OAI-SearchBot",
+      "ChatGPT-User",
+      "Claude-SearchBot",
+      "Claude-User",
+      "PerplexityBot",
+      "Perplexity-User",
+      "Bingbot",
+      "Googlebot",
+      "Applebot",
+      "GPTBot",
+      "ClaudeBot",
+      "Google-Extended",
+      "CCBot",
+      "Applebot-Extended",
+    ]) {
+      expect(named, `${agent} should be named`).toContain(agent);
+    }
+    expect(content.match(/^Content-Signal: search=yes, ai-input=yes, ai-train=yes$/gm)).toHaveLength(1);
+  });
+
+  it("keeps both Sitemap lines", () => {
+    const robots = parseRobotsTxt(readFile(robotsPath));
+    expect(robots.sitemaps).toEqual([`${site.domain}/sitemap.xml`, "https://spreadsheets.diyaccounting.co.uk/sitemap.xml"]);
+  });
 
   it("robots.txt exists", () => {
     expect(fs.existsSync(robotsPath), `${robotsPath} should exist`).toBe(true);
