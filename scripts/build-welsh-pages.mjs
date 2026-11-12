@@ -194,11 +194,11 @@ function welshBreadcrumbs(html, catalogue, pages) {
     let result = block;
     for (const page of pages) {
       const label = catalogue.shared[`breadcrumb-${page.id}`];
-      if (label?.cy) {
-        result = result.replace(
-          new RegExp(`("name": ")[^"]*(", "item": "${page.enUrl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}")`),
-          `$1${label.cy.trim()}$2`,
-        );
+      const itemAt = result.indexOf(`"item": "${page.enUrl}"`);
+      const nameAt = result.lastIndexOf('"name": "', itemAt);
+      if (label?.cy && itemAt !== -1 && nameAt !== -1) {
+        const nameEnd = result.indexOf('"', nameAt + '"name": "'.length);
+        result = `${result.slice(0, nameAt)}"name": "${label.cy.trim()}${result.slice(nameEnd)}`;
       }
       result = result.replaceAll(`"item": "${page.enUrl}"`, `"item": "${welshUrl(page)}"`);
     }
