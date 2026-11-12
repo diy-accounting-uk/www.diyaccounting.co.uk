@@ -247,3 +247,54 @@ describe("Canonical link validation", () => {
     });
   }
 });
+
+describe("Head tags on every sitemap URL", () => {
+  const urls = extractSitemapUrls(readFile(path.join(site.dir, "sitemap.xml")));
+  const fileFor = (url) => {
+    const urlPath = new URL(url).pathname;
+    return path.join(site.dir, urlPath === "/" ? "index.html" : urlPath);
+  };
+  const isHome = (url) => ["/", "/cy/index.html"].includes(new URL(url).pathname);
+
+  for (const url of urls) {
+    describe(url, () => {
+      const html = readFile(fileFor(url));
+      const blocks = extractJsonLd(html);
+
+      it("has Open Graph and Twitter card tags", () => {
+        for (const property of ["og:title", "og:description", "og:url", "og:image", "og:type"]) {
+          expect(html, property).toMatch(new RegExp(`<meta\\s+property="${property}"`));
+        }
+        expect(html).toMatch(/<meta name="twitter:card" content="(summary|summary_large_image)" \/>/);
+        expect(html).toContain(`<meta property="og:url" content="${url}" />`);
+      });
+
+      it("has the one Organization block with the company number and the sameAs list", () => {
+        const organizations = blocks.filter((b) => b["@type"] === "Organization");
+        expect(organizations).toHaveLength(1);
+        const [org] = organizations;
+        expect(Object.keys(org).slice(0, 6)).toEqual(["@context", "@type", "name", "legalName", "url", "address"]);
+        expect(org.identifier.value).toBe("06846849");
+        expect(org.sameAs).toEqual([
+          "https://find-and-update.company-information.service.gov.uk/company/06846849",
+          "https://www.youtube.com/@DIYAccountingSubmit",
+          "https://github.com/diy-accounting-uk",
+          "https://www.npmjs.com/package/@diy-accounting-uk/diya-submit",
+          "https://www.npmjs.com/package/@diy-accounting-uk/diya-gl",
+        ]);
+      });
+
+      it(isHome(url) ? "has no BreadcrumbList" : "has a BreadcrumbList ending at the page", () => {
+        const crumbs = blocks.filter((b) => b["@type"] === "BreadcrumbList");
+        if (isHome(url)) {
+          expect(crumbs).toHaveLength(0);
+          return;
+        }
+        expect(crumbs).toHaveLength(1);
+        const items = crumbs[0].itemListElement;
+        expect(items.at(-1).item).toBe(url);
+        expect(items.map((i) => i.position)).toEqual(items.map((_, index) => index + 1));
+      });
+    });
+  }
+});

@@ -30,6 +30,7 @@
     <meta property="og:site_name" content="DIY Accounting" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://www.diyaccounting.co.uk/images/diyaccounting-label-logo-white-bk.png" />
+    <meta name="twitter:card" content="summary" />
     <link rel="stylesheet" href="gateway.css" />
     <script src="lib/analytics.js"></script>
     <script src="lib/consent-banner.js"></script>
@@ -194,13 +195,8 @@
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "DIY Accounting Limited",
+        "legalName": "DIY Accounting Limited",
         "url": "https://diyaccounting.co.uk",
-        "logo": "https://submit.diyaccounting.co.uk/images/company/diyaccounting-label-logo-white-bk.png",
-        "foundingDate": "2006",
-        "founder": {
-          "@type": "Person",
-          "name": "Terry Cartwright"
-        },
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "37 Sutherland Avenue",
@@ -208,8 +204,32 @@
           "postalCode": "LS8 1BY",
           "addressCountry": "GB"
         },
-        "telephone": "+448450756015",
-        "sameAs": ["https://find-and-update.company-information.service.gov.uk/company/06846849"]
+        "identifier": {
+          "@type": "PropertyValue",
+          "propertyID": "Companies House company number",
+          "value": "06846849"
+        },
+        "sameAs": [
+          "https://find-and-update.company-information.service.gov.uk/company/06846849",
+          "https://www.youtube.com/@DIYAccountingSubmit",
+          "https://github.com/diy-accounting-uk",
+          "https://www.npmjs.com/package/@diy-accounting-uk/diya-submit",
+          "https://www.npmjs.com/package/@diy-accounting-uk/diya-gl"
+        ],
+        "logo": "https://submit.diyaccounting.co.uk/images/company/diyaccounting-label-logo-white-bk.png",
+        "foundingDate": "2006",
+        "founder": { "@type": "Person", "name": "Terry Cartwright" },
+        "telephone": "+448450756015"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "DIY Accounting", "item": "https://diyaccounting.co.uk/" },
+          { "@type": "ListItem", "position": 2, "name": "About", "item": "https://diyaccounting.co.uk/about.html" }
+        ]
       }
     </script>
   </body>
