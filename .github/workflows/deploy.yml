@@ -174,6 +174,28 @@ jobs:
           echo ""
           echo ">>> Copy the CloudFrontDomainName value above and use it as input to root.diyaccounting.co.uk deploy.yml <<<"
 
+  indexnow:
+    name: 'tell IndexNow'
+    if: ${{ needs.params.outputs.environment-name == 'prod' && needs.deploy-gateway.result == 'success' }}
+    needs:
+      - params
+      - deploy-gateway
+    runs-on: ubuntu-24.04
+    continue-on-error: true
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Submit the sitemap URLs to IndexNow
+        run: node scripts/indexnow-submit.mjs
+
   test-gateway:
     name: 'gateway smoke test'
     if: ${{ !cancelled() && !failure() }}

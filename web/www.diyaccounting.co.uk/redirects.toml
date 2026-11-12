@@ -74,6 +74,26 @@ from = "/mtdtest.html"
 to = "/"
 target = "submit"
 
+[[redirect]]
+from = "/article.html"
+to = "/knowledge-base.html"
+target = "spreadsheets"
+
+[[redirect]]
+from = "/feature.html"
+to = "/knowledge-base.html"
+target = "spreadsheets"
+
+[[redirect]]
+from = "/product.html"
+to = "/"
+target = "spreadsheets"
+
+[[redirect]]
+from = "/cy/"
+to = "/cy/index.html"
+target = "self"
+
 # Product ID mapping (old ?product= value on product.html → new product ID for download page)
 [product_map]
 BasicSoleTraderProduct = "BasicSoleTrader"

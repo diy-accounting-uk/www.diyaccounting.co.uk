@@ -147,7 +147,7 @@ function handler(event) {
           .toLowerCase()
           .replace(/^-/, '')
           .replace(/--+/g, '-');
-        return redirect(targetUrl('spreadsheets', '/articles/' + slug + '.md'));
+        return redirect(targetUrl('spreadsheets', '/articles/' + slug + '.html'));
       }
     }
     if (uri === '/product.html' && qs.product) {

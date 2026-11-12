@@ -188,6 +188,24 @@ function welshServicesBlock(catalogue) {
   return `<aside class="welsh-services" aria-labelledby="welshServicesHeading" data-welsh-services>${entry.cy.trim()}</aside>`;
 }
 
+// The BreadcrumbList block names English page URLs; the Welsh page names the Welsh copies and, where the catalogue has one, a Welsh label.
+function welshBreadcrumbs(html, catalogue, pages) {
+  return html.replace(/<script type="application\/ld\+json">(?:(?!<\/script>)[\s\S])*?"BreadcrumbList"[\s\S]*?<\/script>/, (block) => {
+    let result = block;
+    for (const page of pages) {
+      const label = catalogue.shared[`breadcrumb-${page.id}`];
+      const itemAt = result.indexOf(`"item": "${page.enUrl}"`);
+      const nameAt = result.lastIndexOf('"name": "', itemAt);
+      if (label?.cy && itemAt !== -1 && nameAt !== -1) {
+        const nameEnd = result.indexOf('"', nameAt + '"name": "'.length);
+        result = `${result.slice(0, nameAt)}"name": "${label.cy.trim()}${result.slice(nameEnd)}`;
+      }
+      result = result.replaceAll(`"item": "${page.enUrl}"`, `"item": "${welshUrl(page)}"`);
+    }
+    return result;
+  });
+}
+
 export async function renderWelshPage(page, catalogue = loadCatalogue(), pages = WELSH_PAGES) {
   const english = readEnglishPage(page);
   for (const { hreflang, href } of expectedAlternates(page)) {
@@ -211,6 +229,7 @@ export async function renderWelshPage(page, catalogue = loadCatalogue(), pages =
   });
   html = replaceOnce(html, /(<link rel="canonical" href=")[^"]*(")/, `$1${welshUrl(page)}$2`, `canonical link in ${page.en}`);
   html = html.replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${welshUrl(page)}$2`);
+  html = welshBreadcrumbs(html, catalogue, pages);
   html = replaceOnce(html, /<\/main>/, `${welshServicesBlock(catalogue)}</main>`, `</main> in ${page.en}`);
   html = html.replace(/(\s(?:href|src)=")([^"]*)(")/g, (whole, start, url, end) => `${start}${relocate(url, pages)}${end}`);
   html = html.replace(

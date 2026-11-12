@@ -44,6 +44,34 @@ function parseRobotsTxt(content) {
   return directives;
 }
 
+// Helper: group robots.txt rules by the agents they name
+function parseRobotsGroups(content) {
+  const groups = [];
+  let current = null;
+  let lastWasAgent = false;
+  for (const raw of content.split("\n")) {
+    const line = raw.trim();
+    if (line.startsWith("#") || line === "") continue;
+    const [key, ...valueParts] = line.split(":");
+    const keyLower = key.toLowerCase().trim();
+    const value = valueParts.join(":").trim();
+    if (keyLower === "user-agent") {
+      if (!current || !lastWasAgent) {
+        current = { agents: [], allows: [], disallows: [] };
+        groups.push(current);
+      }
+      current.agents.push(value);
+      lastWasAgent = true;
+      continue;
+    }
+    lastWasAgent = false;
+    if (!current) continue;
+    if (keyLower === "allow") current.allows.push(value);
+    else if (keyLower === "disallow") current.disallows.push(value);
+  }
+  return groups;
+}
+
 // Helper: check if a path is disallowed by robots.txt rules
 function isDisallowed(urlPath, disallows) {
   return disallows.some((rule) => urlPath.startsWith(rule));
@@ -106,6 +134,47 @@ describe("Sitemap validation", () => {
 
 describe("robots.txt validation", () => {
   const robotsPath = path.join(site.dir, "robots.txt");
+
+  it("no named agent is disallowed from a sitemap URL", () => {
+    const groups = parseRobotsGroups(readFile(robotsPath));
+    const urls = extractSitemapUrls(readFile(path.join(site.dir, "sitemap.xml")));
+    const namedGroups = groups.filter((g) => !g.agents.includes("*"));
+    expect(namedGroups.length).toBeGreaterThan(0);
+    for (const group of namedGroups) {
+      for (const url of urls) {
+        expect(isDisallowed(new URL(url).pathname, group.disallows), `${group.agents.join(", ")} is disallowed from ${url}`).toBe(false);
+      }
+    }
+  });
+
+  it("names the search agents, the training agents and one content signal", () => {
+    const content = readFile(robotsPath);
+    const named = parseRobotsGroups(content).flatMap((g) => g.agents);
+    for (const agent of [
+      "OAI-SearchBot",
+      "ChatGPT-User",
+      "Claude-SearchBot",
+      "Claude-User",
+      "PerplexityBot",
+      "Perplexity-User",
+      "Bingbot",
+      "Googlebot",
+      "Applebot",
+      "GPTBot",
+      "ClaudeBot",
+      "Google-Extended",
+      "CCBot",
+      "Applebot-Extended",
+    ]) {
+      expect(named, `${agent} should be named`).toContain(agent);
+    }
+    expect(content.match(/^Content-Signal: search=yes, ai-input=yes, ai-train=yes$/gm)).toHaveLength(1);
+  });
+
+  it("keeps both Sitemap lines", () => {
+    const robots = parseRobotsTxt(readFile(robotsPath));
+    expect(robots.sitemaps).toEqual([`${site.domain}/sitemap.xml`, "https://spreadsheets.diyaccounting.co.uk/sitemap.xml"]);
+  });
 
   it("robots.txt exists", () => {
     expect(fs.existsSync(robotsPath), `${robotsPath} should exist`).toBe(true);
@@ -175,6 +244,57 @@ describe("Canonical link validation", () => {
       const html = readFile(path.join(site.dir, file));
       const urlPath = file === "index.html" ? "/" : `/${file}`;
       expect(html).toContain(`<link rel="canonical" href="${site.domain}${urlPath}" />`);
+    });
+  }
+});
+
+describe("Head tags on every sitemap URL", () => {
+  const urls = extractSitemapUrls(readFile(path.join(site.dir, "sitemap.xml")));
+  const fileFor = (url) => {
+    const urlPath = new URL(url).pathname;
+    return path.join(site.dir, urlPath === "/" ? "index.html" : urlPath);
+  };
+  const isHome = (url) => ["/", "/cy/index.html"].includes(new URL(url).pathname);
+
+  for (const url of urls) {
+    describe(url, () => {
+      const html = readFile(fileFor(url));
+      const blocks = extractJsonLd(html);
+
+      it("has Open Graph and Twitter card tags", () => {
+        for (const property of ["og:title", "og:description", "og:url", "og:image", "og:type"]) {
+          expect(html, property).toMatch(new RegExp(`<meta\\s+property="${property}"`));
+        }
+        expect(html).toMatch(/<meta name="twitter:card" content="(summary|summary_large_image)" \/>/);
+        expect(html).toContain(`<meta property="og:url" content="${url}" />`);
+      });
+
+      it("has the one Organization block with the company number and the sameAs list", () => {
+        const organizations = blocks.filter((b) => b["@type"] === "Organization");
+        expect(organizations).toHaveLength(1);
+        const [org] = organizations;
+        expect(Object.keys(org).slice(0, 6)).toEqual(["@context", "@type", "name", "legalName", "url", "address"]);
+        expect(org.identifier.value).toBe("06846849");
+        expect(org.sameAs).toEqual([
+          "https://find-and-update.company-information.service.gov.uk/company/06846849",
+          "https://www.youtube.com/@DIYAccountingSubmit",
+          "https://github.com/diy-accounting-uk",
+          "https://www.npmjs.com/package/@diy-accounting-uk/diya-submit",
+          "https://www.npmjs.com/package/@diy-accounting-uk/diya-gl",
+        ]);
+      });
+
+      it(isHome(url) ? "has no BreadcrumbList" : "has a BreadcrumbList ending at the page", () => {
+        const crumbs = blocks.filter((b) => b["@type"] === "BreadcrumbList");
+        if (isHome(url)) {
+          expect(crumbs).toHaveLength(0);
+          return;
+        }
+        expect(crumbs).toHaveLength(1);
+        const items = crumbs[0].itemListElement;
+        expect(items.at(-1).item).toBe(url);
+        expect(items.map((i) => i.position)).toEqual(items.map((_, index) => index + 1));
+      });
     });
   }
 });

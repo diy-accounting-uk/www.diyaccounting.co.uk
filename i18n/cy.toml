@@ -50,6 +50,9 @@
 #          https://www.gov.uk/government/organisations/hm-revenue-customs/contact/welsh-language-helplines (updated 19 Rhagfyr 2025)
 #          https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-customs-and-excise-and-duties-enquiries-for-welsh-speaking-customers (updated 19 Rhagfyr 2025)
 
+[shared."breadcrumb-about"]
+cy = '''Amdanom ni'''
+
 [shared."hmrc-welsh-services"]
 cy = '''
 <h2 id="welshServicesHeading">Gwasanaethau Cymraeg CThEF</h2>

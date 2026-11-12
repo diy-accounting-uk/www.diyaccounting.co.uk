@@ -68,3 +68,48 @@ describe("www host redirect", () => {
     expect(res.uri).toBe("/about.html");
   });
 });
+
+describe("old gateway paths that answered 403", () => {
+  const apex = "diyaccounting.co.uk";
+
+  it("sends an article id to its html page", () => {
+    const res = run(apex, "/article.html", { article: { value: "EasyTaxiDriverAccountingArticle" } });
+    expect(res.statusCode).toBe(301);
+    expect(res.headers.location.value).toBe("https://spreadsheets.diyaccounting.co.uk/articles/easy-taxi-driver-accounting.html");
+  });
+
+  it("sends an article id on the www host to the same html page in one hop", () => {
+    const res = run("www.diyaccounting.co.uk", "/article.html", { article: { value: "EasyTaxiDriverAccountingArticle" } });
+    expect(res.headers.location.value).toBe("https://spreadsheets.diyaccounting.co.uk/articles/easy-taxi-driver-accounting.html");
+  });
+
+  it("sends an article path with no id to the knowledge base", () => {
+    const res = run(apex, "/article.html");
+    expect(res.headers.location.value).toBe("https://spreadsheets.diyaccounting.co.uk/knowledge-base.html");
+  });
+
+  it("sends a feature path to the knowledge base", () => {
+    const res = run(apex, "/feature.html", { feature: { value: "TaxiReceiptsFeature" } });
+    expect(res.headers.location.value).toBe("https://spreadsheets.diyaccounting.co.uk/knowledge-base.html");
+  });
+
+  it("sends a known product id to its download page", () => {
+    const res = run(apex, "/product.html", { product: { value: "CompanyAccountsProduct" } });
+    expect(res.headers.location.value).toBe("https://spreadsheets.diyaccounting.co.uk/download.html?product=Company");
+  });
+
+  it("sends an unknown product id to the spreadsheets home page", () => {
+    const res = run(apex, "/product.html", { product: { value: "RetiredProduct" } });
+    expect(res.headers.location.value).toBe("https://spreadsheets.diyaccounting.co.uk/");
+  });
+
+  it("serves the Welsh index for /cy/ on the apex", () => {
+    const res = run(apex, "/cy/");
+    expect(res.uri).toBe("/cy/index.html");
+  });
+
+  it("sends /cy/ on the www host to the apex Welsh index", () => {
+    const res = run("www.diyaccounting.co.uk", "/cy/");
+    expect(res.headers.location.value).toBe("https://diyaccounting.co.uk/cy/index.html");
+  });
+});
