@@ -1,0 +1,10 @@
+# DIY Accounting
+
+> DIY Accounting provides accounting software for UK small businesses. Submit VAT returns to HMRC under Making Tax Digital, or use our Excel bookkeeping spreadsheets. This site leads to DIY Accounting Submit (https://submit.diyaccounting.co.uk): Submit UK VAT returns to HMRC under Making Tax Digital (MTD). It also leads to DIY Accounting Spreadsheets (https://spreadsheets.diyaccounting.co.uk): Excel bookkeeping and accounting software for UK small businesses.
+
+## Pages
+
+- [DIY Accounting - Accounting Software for UK Small Businesses](https://diyaccounting.co.uk/): DIY Accounting provides accounting software for UK small businesses. Submit VAT returns to HMRC under Making Tax Digital, or use our Excel bookkeeping spreadsheets.
+- [DIY Accounting - Meddalwedd cyfrifyddu i fusnesau bach yn y DU](https://diyaccounting.co.uk/cy/index.html): Mae DIY Accounting yn darparu meddalwedd cyfrifyddu i fusnesau bach yn y DU. Cyflwynwch Ffurflenni TAW i CThEF drwy’r cynllun Troi Treth yn Ddigidol, neu defnyddiwch ein taenlenni Excel ar gyfer cadw cyfrifon.
+- [About - DIY Accounting Limited](https://diyaccounting.co.uk/about.html): About DIY Accounting Limited - company information, directors, history, and contact details. Founded by Terry Cartwright, now managed by his family.
+- [Amdanom ni - DIY Accounting Limited](https://diyaccounting.co.uk/cy/about.html): Am DIY Accounting Limited - gwybodaeth am y cwmni, cyfarwyddwyr, hanes a manylion cyswllt. Sefydlwyd gan Terry Cartwright, ac erbyn hyn mae ei deulu’n ei reoli.
