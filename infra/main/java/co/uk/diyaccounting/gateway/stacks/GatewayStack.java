@@ -365,7 +365,7 @@ public class GatewayStack extends Stack {
                 .destinationBucket(this.originBucket)
                 .distribution(distribution)
                 .distributionPaths(
-                        List.of("/index.html", "/about.html", "/gateway.css", "/lib/*", "/robots.txt", "/sitemap.xml", "/.well-known/*"))
+                        List.of("/index.html", "/about.html", "/gateway.css", "/lib/*", "/robots.txt", "/sitemap.xml", "/llms.txt", "/llms-full.txt", "/cy/*", "/.well-known/*"))
                 .retainOnDelete(true)
                 .expires(Expiration.after(Duration.minutes(5)))
                 .prune(false)
