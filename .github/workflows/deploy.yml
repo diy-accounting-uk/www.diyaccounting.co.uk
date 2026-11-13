@@ -12,6 +12,8 @@ on:
     paths:
       - 'infra/main/**'
       - 'web/www.diyaccounting.co.uk/public/**'
+      - 'web/www.diyaccounting.co.uk/redirects.toml'
+      - 'scripts/build-gateway-redirects.cjs'
       - '.env.ci'
       - '.env.prod'
       - '**/cdk.json'
