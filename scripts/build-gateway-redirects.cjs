@@ -116,6 +116,15 @@ function handler(event) {
   // Product ID mapping (old → new)
   var productMap = ${prodMapStr};
 
+  // New product id → slug of its page on the spreadsheets site
+  var productPageSlugs = {
+    BasicSoleTrader: 'basic-sole-trader',
+    SelfEmployed: 'self-employed',
+    Company: 'company',
+    TaxiDriver: 'taxi-driver',
+    Payslip05: 'payslip-05'
+  };
+
   // Helper: return 301 redirect
   function redirect(url) {
     return {
@@ -159,7 +168,12 @@ function handler(event) {
       return redirect(targetUrl('spreadsheets', '/'));
     }
     if (uri === '/feature.html') {
-      return redirect(targetUrl('spreadsheets', '/knowledge-base.html'));
+      var featureProdId = qs.product && ((typeof qs.product === 'object') ? qs.product.value : qs.product);
+      var featureSlug = productPageSlugs[productMap[featureProdId]];
+      if (featureSlug) {
+        return redirect(targetUrl('spreadsheets', '/products/' + featureSlug + '.html'));
+      }
+      return redirect(targetUrl('spreadsheets', '/'));
     }
     // Self-target means rewrite URI (no external redirect)
     if (rule.t === 'self') {
