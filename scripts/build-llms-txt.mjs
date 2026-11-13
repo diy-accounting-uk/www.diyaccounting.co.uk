@@ -10,6 +10,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import * as cheerio from "cheerio";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const PUBLIC_DIR = join(ROOT, "web", "www.diyaccounting.co.uk", "public");
@@ -17,25 +18,34 @@ export const SITE_ORIGIN = "https://diyaccounting.co.uk";
 export const SUBMIT_ORIGIN = "https://submit.diyaccounting.co.uk";
 export const SPREADSHEETS_ORIGIN = "https://spreadsheets.diyaccounting.co.uk";
 
-const ENTITIES = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", mdash: "—", ndash: "–", pound: "£", copy: "©" };
+const BLOCK_TAGS = new Set([
+  "p",
+  "div",
+  "address",
+  "details",
+  "summary",
+  "nav",
+  "ul",
+  "ol",
+  "section",
+  "aside",
+  "article",
+  "header",
+  "footer",
+  "main",
+]);
+const LINE_BREAK = "\u2028";
+const SKIPPED_TAGS = new Set(["script", "style"]);
 
-function decodeEntities(text) {
-  return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (whole, name) => {
-    if (name.startsWith("#x")) return String.fromCodePoint(parseInt(name.slice(2), 16));
-    if (name.startsWith("#")) return String.fromCodePoint(parseInt(name.slice(1), 10));
-    return ENTITIES[name.toLowerCase()] ?? whole;
-  });
-}
-
-function oneLine(text) {
-  return decodeEntities(text.replace(/<[^>]+>/g, " "))
-    .replace(/ +([:,.;)])/g, "$1")
-    .replace(/\s+/g, " ")
-    .trim();
+function squash(text) {
+  return text.replace(/\s+/g, " ").trim();
 }
 
 export function sitemapUrls(xml) {
-  return [...xml.matchAll(/<url><loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+  const $ = cheerio.load(xml, { xml: true });
+  return $("url > loc")
+    .map((index, element) => $(element).text().trim())
+    .get();
 }
 
 export function pageFile(url) {
@@ -44,47 +54,90 @@ export function pageFile(url) {
 }
 
 export function pageTitle(html) {
-  return oneLine(html.match(/<title>([\s\S]*?)<\/title>/)[1]);
+  return squash(cheerio.load(html)("title").first().text());
 }
 
 export function pageDescription(html) {
-  return decodeEntities(html.match(/<meta\s+name="description"\s+content="([^"]*)"/)[1])
-    .replace(/\s+/g, " ")
-    .trim();
+  return squash(cheerio.load(html)('meta[name="description"]').first().attr("content"));
 }
 
-function mainHtml(html) {
-  return html.match(/<main[^>]*>([\s\S]*?)<\/main>/)[1];
+function linkLabel($, anchor) {
+  const spans = $(anchor).children("span");
+  return spans.length > 0
+    ? spans
+        .map((index, span) => squash($(span).text()))
+        .get()
+        .join(": ")
+    : squash($(anchor).text());
 }
 
-export function pageMarkdown(html, url) {
-  const absolute = (href) => new URL(href, url).href;
-  const text = mainHtml(html)
-    .replace(/<!--[\s\S]*?-->/g, "")
-    .replace(/<(script|style)[\s\S]*?<\/\1>/g, "")
-    .replace(/<a\s([^>]*?)href="([^"]*)"([^>]*)>([\s\S]*?)<\/a\s*>/g, (whole, before, href, after, inner) => {
-      const label = oneLine(inner.replace(/<\/span\s*>\s*<span/g, "</span>: <span"));
-      const bullet = /class="gateway-btn/.test(before + after) ? "\n- " : "";
-      return `${bullet}[${label}](${absolute(href)})`;
-    })
-    .replace(/<h([1-6])[^>]*>([\s\S]*?)<\/h\1\s*>/g, (whole, level, inner) => `\n\n${"#".repeat(Number(level))} ${oneLine(inner)}\n\n`)
-    .replace(/<li[^>]*>([\s\S]*?)<\/li\s*>/g, (whole, inner) => `\n- ${oneLine(inner.replace(/<strong>([\s\S]*?)<\/strong>/g, "**$1**"))}`)
-    .replace(/<br\s*\/?>/g, "\n")
-    .replace(/<\/?(p|div|address|details|summary|nav|ul|section)[^>]*>/g, "\n\n")
-    .replace(/<[^>]+>/g, "");
-  return decodeEntities(text)
-    .split("\n")
-    .map((line) => line.replace(/[ \t]+/g, " ").trim())
-    .join("\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .replace(/(?<=\n- [^\n]*)\n\n(?=- )/g, "\n")
+function inlineMarkdown($, node, pageUrl) {
+  if (node.type === "text") return node.data;
+  if (node.type !== "tag" || SKIPPED_TAGS.has(node.name)) return "";
+  if (node.name === "br") return LINE_BREAK;
+  if (node.name === "a") return `[${linkLabel($, node)}](${new URL($(node).attr("href"), pageUrl).href})`;
+  const inner = node.children.map((child) => inlineMarkdown($, child, pageUrl)).join("");
+  return node.name === "strong" ? `**${inner}**` : inner;
+}
+
+function tidyLines(text) {
+  return text
+    .split(LINE_BREAK)
+    .map(squash)
+    .filter((line) => line !== "")
+    .join("\n");
+}
+
+export function pageMarkdown(html, pageUrl) {
+  const $ = cheerio.load(html);
+  const blocks = [];
+  let inline = "";
+  const flush = () => {
+    const text = tidyLines(inline);
+    if (text !== "") blocks.push(text);
+    inline = "";
+  };
+  const push = (text) => {
+    flush();
+    blocks.push(text);
+  };
+  const walk = (node) => {
+    if (node.type === "text") {
+      inline += node.data;
+      return;
+    }
+    if (node.type !== "tag" || SKIPPED_TAGS.has(node.name)) return;
+    const heading = node.name.match(/^h([1-6])$/);
+    if (heading) {
+      push(`${"#".repeat(Number(heading[1]))} ${squash(inlineMarkdown($, node, pageUrl))}`);
+    } else if (node.name === "li" || (node.name === "a" && $(node).hasClass("gateway-btn"))) {
+      push(`- ${squash(inlineMarkdown($, node, pageUrl))}`);
+    } else if (BLOCK_TAGS.has(node.name)) {
+      flush();
+      node.children.forEach(walk);
+      flush();
+    } else {
+      inline += inlineMarkdown($, node, pageUrl);
+    }
+  };
+  $("main").first().children().toArray().forEach(walk);
+  flush();
+  return blocks
+    .map((block, index) => (index > 0 && block.startsWith("- ") && blocks[index - 1].startsWith("- ") ? `\n${block}` : `\n\n${block}`))
+    .join("")
     .trim();
 }
 
 function productLink(indexHtml, origin) {
-  const anchor = indexHtml.match(new RegExp(`<a\\s[^>]*?href="${origin.replaceAll(".", "\\.")}[^"]*"[^>]*>([\\s\\S]*?)</a>`));
+  const $ = cheerio.load(indexHtml);
+  const anchor = $("a[href]")
+    .toArray()
+    .find((element) => new URL($(element).attr("href"), `${SITE_ORIGIN}/`).origin === origin);
   if (!anchor) throw new Error(`index.html has no link to ${origin}`);
-  const [title, subtitle] = [...anchor[1].matchAll(/<span[^>]*>([\s\S]*?)<\/span\s*>/g)].map((match) => oneLine(match[1]));
+  const [title, subtitle] = $(anchor)
+    .children("span")
+    .map((index, span) => squash($(span).text()))
+    .get();
   return { title, subtitle };
 }
 
@@ -98,7 +151,7 @@ export function loadPages(publicDir = PUBLIC_DIR) {
 
 export function renderLlmsTxt(pages) {
   const index = pages.find((page) => page.url === `${SITE_ORIGIN}/`);
-  const siteName = index.html.match(/<meta property="og:site_name" content="([^"]*)"/)[1];
+  const siteName = cheerio.load(index.html)('meta[property="og:site_name"]').attr("content");
   const submit = productLink(index.html, SUBMIT_ORIGIN);
   const spreadsheets = productLink(index.html, SPREADSHEETS_ORIGIN);
   const summary =

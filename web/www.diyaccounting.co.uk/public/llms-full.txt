@@ -9,11 +9,9 @@ Source: https://diyaccounting.co.uk/
 - [Developer resources: API docs, MCP tools, libraries and test reports](https://developer.diyaccounting.co.uk/)
 - [DIY Accounting Limited: Company information, directors, history and contact details](https://diyaccounting.co.uk/about.html)
 
-DIY Accounting Limited has been providing accounting software for UK small businesses since 2006. Founded by Terry Cartwright, a
-Chartered Management Accountant, the company is now managed by his family.
+DIY Accounting Limited has been providing accounting software for UK small businesses since 2006. Founded by Terry Cartwright, a Chartered Management Accountant, the company is now managed by his family.
 
-Our products are designed to be straightforward and practical, giving small businesses the tools they need without unnecessary
-complexity.
+Our products are designed to be straightforward and practical, giving small businesses the tools they need without unnecessary complexity.
 
 # DIY Accounting - Meddalwedd cyfrifyddu i fusnesau bach yn y DU
 
@@ -26,22 +24,17 @@ Source: https://diyaccounting.co.uk/cy/index.html
 - [Adnoddau datblygwyr: Dogfennau API, offer MCP, llyfrgelloedd ac adroddiadau profion](https://developer.diyaccounting.co.uk/)
 - [DIY Accounting Limited: Gwybodaeth am y cwmni, cyfarwyddwyr, hanes a manylion cyswllt](https://diyaccounting.co.uk/cy/about.html)
 
-Mae DIY Accounting Limited wedi darparu meddalwedd cyfrifyddu i fusnesau bach yn y DU ers 2006. Sefydlwyd y cwmni gan Terry
-Cartwright, Cyfrifydd Rheoli Siartredig, ac erbyn hyn mae ei deulu’n ei reoli.
+Mae DIY Accounting Limited wedi darparu meddalwedd cyfrifyddu i fusnesau bach yn y DU ers 2006. Sefydlwyd y cwmni gan Terry Cartwright, Cyfrifydd Rheoli Siartredig, ac erbyn hyn mae ei deulu’n ei reoli.
 
-Mae ein cynhyrchion yn syml ac yn ymarferol. Maen nhw’n rhoi i fusnesau bach yr offer sydd eu hangen arnyn nhw, heb gymhlethdod
-diangen.
+Mae ein cynhyrchion yn syml ac yn ymarferol. Maen nhw’n rhoi i fusnesau bach yr offer sydd eu hangen arnyn nhw, heb gymhlethdod diangen.
 
 ## Gwasanaethau Cymraeg CThEF
 
-Mae sgriniau a negeseuon ar-lein CThEF ar gael yn Gymraeg. Pan fydd DIY Accounting Submit yn eich anfon i CThEF i fewngofnodi,
-dewiswch ‘Cymraeg’ ar dudalen CThEF.
+Mae sgriniau a negeseuon ar-lein CThEF ar gael yn Gymraeg. Pan fydd DIY Accounting Submit yn eich anfon i CThEF i fewngofnodi, dewiswch ‘Cymraeg’ ar dudalen CThEF.
 
 Yn DIY Accounting Submit, gallwch weld adborth HMRC Assist ar eich Ffurflen TAW yn Gymraeg.
 
-Llinell gymorth Gymraeg CThEF ar gyfer Treth Incwm, Hunanasesiad, Yswiriant Gwladol a TWE:
-[0300 200 1900](tel:+443002001900). Ar gyfer TAW, tollau ac ecséis: [0300 200 3705](tel:+443002003705).
-Mae’r ddwy linell ar agor o ddydd Llun i ddydd Gwener, 8:30am i 5pm, ac ar gau ar wyliau banc.
+Llinell gymorth Gymraeg CThEF ar gyfer Treth Incwm, Hunanasesiad, Yswiriant Gwladol a TWE: [0300 200 1900](tel:+443002001900). Ar gyfer TAW, tollau ac ecséis: [0300 200 3705](tel:+443002003705). Mae’r ddwy linell ar agor o ddydd Llun i ddydd Gwener, 8:30am i 5pm, ac ar gau ar wyliau banc.
 
 [Llinellau cymorth Cymraeg CThEF ar GOV.UK](https://www.gov.uk/government/organisations/hm-revenue-customs/contact/welsh-language-helplines)
 
@@ -53,11 +46,9 @@ Source: https://diyaccounting.co.uk/about.html
 
 ## About DIY Accounting
 
-DIY Accounting Limited is managed by the family of founder Terry Cartwright. Since January 2010, the team has taken over
-day-to-day operations while maintaining the standards of ease of use and personal customer service that Terry established.
+DIY Accounting Limited is managed by the family of founder Terry Cartwright. Since January 2010, the team has taken over day-to-day operations while maintaining the standards of ease of use and personal customer service that Terry established.
 
-The company is known for straightforward accounting spreadsheets designed by a Chartered Management Accountant, providing small
-businesses with the tools they need without unnecessary complexity.
+The company is known for straightforward accounting spreadsheets designed by a Chartered Management Accountant, providing small businesses with the tools they need without unnecessary complexity.
 
 - **Antony Cartwright** — Director
 - **Jane Grundy** — Director
@@ -65,63 +56,41 @@ businesses with the tools they need without unnecessary complexity.
 
 Read more about DIY Accounting
 
-DIY Accounting has always been recognised for its ease of use and personal customer service. The current team includes a
-dedicated marketing executive and customer service support, along with an online marketing consultant and accounts assistant
-providing technical support.
+DIY Accounting has always been recognised for its ease of use and personal customer service. The current team includes a dedicated marketing executive and customer service support, along with an online marketing consultant and accounts assistant providing technical support.
 
-All accounting and payroll software was personally designed by Terry Cartwright. He would answer every customer question about
-accounting software, bookkeeping, or payroll software himself. The team now aims to provide the same high quality of care and
-expertise that Terry provided, and success is measured by customer feedback.
+All accounting and payroll software was personally designed by Terry Cartwright. He would answer every customer question about accounting software, bookkeeping, or payroll software himself. The team now aims to provide the same high quality of care and expertise that Terry provided, and success is measured by customer feedback.
 
-If you think we can improve our product or service, we welcome suggestions. We are committed to continuing the legacy of
-accessible, reliable accounting tools for UK small businesses.
+If you think we can improve our product or service, we welcome suggestions. We are committed to continuing the legacy of accessible, reliable accounting tools for UK small businesses.
 
 ## History
 
-DIY Accounting was founded by Terry Cartwright, a Chartered Management Accountant (ACMA) and Chartered Company Secretary (ACIS),
-who began designing payroll and accounting systems on Excel spreadsheets in 2006.
+DIY Accounting was founded by Terry Cartwright, a Chartered Management Accountant (ACMA) and Chartered Company Secretary (ACIS), who began designing payroll and accounting systems on Excel spreadsheets in 2006.
 
 Terry passed away in December 2009 and the company is now managed by his children: Antony, Jane, Samantha, Lindsey, and Daniel.
 
 Read more about the founder
 
-Terry Cartwright qualified as a Chartered Management Accountant (ACMA) in 1971 and went on to design a revenue budgeting system
-for British Rail. He served as Management and Works Accountant at New World Gas Cookers before qualifying as a Chartered Company
-Secretary (ACIS).
+Terry Cartwright qualified as a Chartered Management Accountant (ACMA) in 1971 and went on to design a revenue budgeting system for British Rail. He served as Management and Works Accountant at New World Gas Cookers before qualifying as a Chartered Company Secretary (ACIS).
 
-At British Steel he was promoted to Head of Finance and Administration for the Refractories division. He later worked in Saudi
-Arabia as Chief Accountant for an American corporation, and on returning to the UK became Chief Accountant at Dunlop Industrial
-Hose.
+At British Steel he was promoted to Head of Finance and Administration for the Refractories division. He later worked in Saudi Arabia as Chief Accountant for an American corporation, and on returning to the UK became Chief Accountant at Dunlop Industrial Hose.
 
-In the early 1980s Terry started his own retail and wholesale company, growing it to multiple outlets with turnover approaching
-£1 million. In the early 1990s he returned to accountancy, working on a European sales accounting system, Oracle software
-implementations, and a treasury management system for a UK bank, before serving as Finance Director for a communications
-company.
+In the early 1980s Terry started his own retail and wholesale company, growing it to multiple outlets with turnover approaching £1 million. In the early 1990s he returned to accountancy, working on a European sales accounting system, Oracle software implementations, and a treasury management system for a UK bank, before serving as Finance Director for a communications company.
 
-Semi-retiring around 2000, Terry pursued ornithology alongside maintaining financial accounts for industrial companies. In 2006
-he started DIY Accounting, applying his decades of experience to designing practical payroll and accounting systems on Excel
-spreadsheets. As a Chartered Company Secretary he also acted as a company formation agent.
+Semi-retiring around 2000, Terry pursued ornithology alongside maintaining financial accounts for industrial companies. In 2006 he started DIY Accounting, applying his decades of experience to designing practical payroll and accounting systems on Excel spreadsheets. As a Chartered Company Secretary he also acted as a company formation agent.
 
 ## Contact
 
-DIY Accounting Limited
-
+**DIY Accounting Limited**
 37 Sutherland Avenue
-
 Leeds
-
 LS8 1BY
-
 United Kingdom
 
 Phone: 0845 0756015 (UK)
-
 Phone: +44 845 075 6015 (International)
-
 Messages are transcribed for part-time staff
 
-Registered in England and Wales — Company Number:
-[06846849](https://find-and-update.company-information.service.gov.uk/company/06846849)
+Registered in England and Wales — Company Number: [06846849](https://find-and-update.company-information.service.gov.uk/company/06846849)
 
 # Amdanom ni - DIY Accounting Limited
 
@@ -129,11 +98,9 @@ Source: https://diyaccounting.co.uk/cy/about.html
 
 ## Am DIY Accounting
 
-Teulu’r sylfaenydd, Terry Cartwright, sy’n rheoli DIY Accounting Limited. Ers mis Ionawr 2010, y tîm sy’n rhedeg y gwaith o ddydd
-i ddydd, ac mae’n cadw’r safonau a osododd Terry: meddalwedd sy’n hawdd ei defnyddio a gwasanaeth personol i gwsmeriaid.
+Teulu’r sylfaenydd, Terry Cartwright, sy’n rheoli DIY Accounting Limited. Ers mis Ionawr 2010, y tîm sy’n rhedeg y gwaith o ddydd i ddydd, ac mae’n cadw’r safonau a osododd Terry: meddalwedd sy’n hawdd ei defnyddio a gwasanaeth personol i gwsmeriaid.
 
-Mae’r cwmni’n adnabyddus am daenlenni cyfrifyddu syml a gynlluniwyd gan Gyfrifydd Rheoli Siartredig. Maen nhw’n rhoi i fusnesau
-bach yr offer sydd eu hangen arnyn nhw, heb gymhlethdod diangen.
+Mae’r cwmni’n adnabyddus am daenlenni cyfrifyddu syml a gynlluniwyd gan Gyfrifydd Rheoli Siartredig. Maen nhw’n rhoi i fusnesau bach yr offer sydd eu hangen arnyn nhw, heb gymhlethdod diangen.
 
 - **Antony Cartwright** — Cyfarwyddwr
 - **Jane Grundy** — Cyfarwyddwr
@@ -141,74 +108,49 @@ bach yr offer sydd eu hangen arnyn nhw, heb gymhlethdod diangen.
 
 Darllen mwy am DIY Accounting
 
-Mae DIY Accounting wedi bod yn adnabyddus erioed am feddalwedd sy’n hawdd ei defnyddio ac am wasanaeth personol i gwsmeriaid.
-Mae’r tîm presennol yn cynnwys swyddog marchnata a chymorth gwasanaeth cwsmeriaid, ynghyd ag ymgynghorydd marchnata ar-lein a
-chynorthwyydd cyfrifon sy’n rhoi cymorth technegol.
+Mae DIY Accounting wedi bod yn adnabyddus erioed am feddalwedd sy’n hawdd ei defnyddio ac am wasanaeth personol i gwsmeriaid. Mae’r tîm presennol yn cynnwys swyddog marchnata a chymorth gwasanaeth cwsmeriaid, ynghyd ag ymgynghorydd marchnata ar-lein a chynorthwyydd cyfrifon sy’n rhoi cymorth technegol.
 
-Terry Cartwright ei hun a gynlluniodd yr holl feddalwedd cyfrifyddu a chyflogres. Byddai’n ateb pob cwestiwn gan gwsmeriaid am
-feddalwedd cyfrifyddu, cadw cyfrifon neu feddalwedd cyflogres ei hun. Nod y tîm nawr yw rhoi’r un gofal ac arbenigedd o safon
-uchel ag a roddodd Terry, ac rydym yn mesur llwyddiant drwy adborth cwsmeriaid.
+Terry Cartwright ei hun a gynlluniodd yr holl feddalwedd cyfrifyddu a chyflogres. Byddai’n ateb pob cwestiwn gan gwsmeriaid am feddalwedd cyfrifyddu, cadw cyfrifon neu feddalwedd cyflogres ei hun. Nod y tîm nawr yw rhoi’r un gofal ac arbenigedd o safon uchel ag a roddodd Terry, ac rydym yn mesur llwyddiant drwy adborth cwsmeriaid.
 
-Os ydych yn credu y gallwn wella ein cynnyrch neu ein gwasanaeth, rydym yn croesawu awgrymiadau. Rydym wedi ymrwymo i barhau â’r
-gwaith o ddarparu offer cyfrifyddu hygyrch a dibynadwy i fusnesau bach yn y DU.
+Os ydych yn credu y gallwn wella ein cynnyrch neu ein gwasanaeth, rydym yn croesawu awgrymiadau. Rydym wedi ymrwymo i barhau â’r gwaith o ddarparu offer cyfrifyddu hygyrch a dibynadwy i fusnesau bach yn y DU.
 
 ## Hanes
 
-Sefydlwyd DIY Accounting gan Terry Cartwright, Cyfrifydd Rheoli Siartredig (ACMA) ac Ysgrifennydd Cwmni Siartredig (ACIS).
-Dechreuodd gynllunio systemau cyflogres a chyfrifyddu ar daenlenni Excel yn 2006.
+Sefydlwyd DIY Accounting gan Terry Cartwright, Cyfrifydd Rheoli Siartredig (ACMA) ac Ysgrifennydd Cwmni Siartredig (ACIS). Dechreuodd gynllunio systemau cyflogres a chyfrifyddu ar daenlenni Excel yn 2006.
 
 Bu farw Terry ym mis Rhagfyr 2009, ac erbyn hyn ei blant sy’n rheoli’r cwmni: Antony, Jane, Samantha, Lindsey a Daniel.
 
 Darllen mwy am y sylfaenydd
 
-Cymhwysodd Terry Cartwright fel Cyfrifydd Rheoli Siartredig (ACMA) yn 1971, ac aeth ymlaen i gynllunio system cyllidebu refeniw
-ar gyfer British Rail. Bu’n Gyfrifydd Rheoli a Gwaith yn New World Gas Cookers cyn cymhwyso fel Ysgrifennydd Cwmni Siartredig
-(ACIS).
+Cymhwysodd Terry Cartwright fel Cyfrifydd Rheoli Siartredig (ACMA) yn 1971, ac aeth ymlaen i gynllunio system cyllidebu refeniw ar gyfer British Rail. Bu’n Gyfrifydd Rheoli a Gwaith yn New World Gas Cookers cyn cymhwyso fel Ysgrifennydd Cwmni Siartredig (ACIS).
 
-Yn British Steel, cafodd ei ddyrchafu’n Bennaeth Cyllid a Gweinyddu yn yr adran Refractories. Yn ddiweddarach bu’n gweithio yn
-Saudi Arabia fel Prif Gyfrifydd i gorfforaeth Americanaidd. Ar ôl dod yn ôl i’r DU, daeth yn Brif Gyfrifydd yn Dunlop Industrial
-Hose.
+Yn British Steel, cafodd ei ddyrchafu’n Bennaeth Cyllid a Gweinyddu yn yr adran Refractories. Yn ddiweddarach bu’n gweithio yn Saudi Arabia fel Prif Gyfrifydd i gorfforaeth Americanaidd. Ar ôl dod yn ôl i’r DU, daeth yn Brif Gyfrifydd yn Dunlop Industrial Hose.
 
-Ar ddechrau’r 1980au, dechreuodd Terry ei gwmni manwerthu a chyfanwerthu ei hun, a thyfodd y cwmni i sawl siop gyda throsiant o
-bron i £1 miliwn. Ar ddechrau’r 1990au dychwelodd at gyfrifyddiaeth. Bu’n gweithio ar system cyfrifyddu gwerthiant
-Ewropeaidd, ar osod meddalwedd Oracle, ac ar system rheoli trysorlys i fanc yn y DU, cyn dod yn Gyfarwyddwr Cyllid i gwmni
-cyfathrebu.
+Ar ddechrau’r 1980au, dechreuodd Terry ei gwmni manwerthu a chyfanwerthu ei hun, a thyfodd y cwmni i sawl siop gyda throsiant o bron i £1 miliwn. Ar ddechrau’r 1990au dychwelodd at gyfrifyddiaeth. Bu’n gweithio ar system cyfrifyddu gwerthiant Ewropeaidd, ar osod meddalwedd Oracle, ac ar system rheoli trysorlys i fanc yn y DU, cyn dod yn Gyfarwyddwr Cyllid i gwmni cyfathrebu.
 
-Pan hanner ymddeolodd tua 2000, dilynodd Terry ei ddiddordeb mewn adareg, a pharhaodd i gadw cyfrifon ariannol i gwmnïau
-diwydiannol. Yn 2006 dechreuodd DIY Accounting, a defnyddiodd ddegawdau o brofiad i gynllunio systemau cyflogres a chyfrifyddu
-ymarferol ar daenlenni Excel. Fel Ysgrifennydd Cwmni Siartredig, bu hefyd yn asiant ffurfio cwmnïau.
+Pan hanner ymddeolodd tua 2000, dilynodd Terry ei ddiddordeb mewn adareg, a pharhaodd i gadw cyfrifon ariannol i gwmnïau diwydiannol. Yn 2006 dechreuodd DIY Accounting, a defnyddiodd ddegawdau o brofiad i gynllunio systemau cyflogres a chyfrifyddu ymarferol ar daenlenni Excel. Fel Ysgrifennydd Cwmni Siartredig, bu hefyd yn asiant ffurfio cwmnïau.
 
 ## Cysylltu â ni
 
-DIY Accounting Limited
-
+**DIY Accounting Limited**
 37 Sutherland Avenue
-
 Leeds
-
 LS8 1BY
-
 Y Deyrnas Unedig
 
 Ffôn: 0845 0756015 (DU)
-
 Ffôn: +44 845 075 6015 (rhyngwladol)
-
 Mae negeseuon yn cael eu trawsgrifio ar gyfer staff rhan-amser
 
-Cofrestrwyd yng Nghymru a Lloegr — Rhif y cwmni:
-[06846849](https://find-and-update.company-information.service.gov.uk/company/06846849)
+Cofrestrwyd yng Nghymru a Lloegr — Rhif y cwmni: [06846849](https://find-and-update.company-information.service.gov.uk/company/06846849)
 
 ## Gwasanaethau Cymraeg CThEF
 
-Mae sgriniau a negeseuon ar-lein CThEF ar gael yn Gymraeg. Pan fydd DIY Accounting Submit yn eich anfon i CThEF i fewngofnodi,
-dewiswch ‘Cymraeg’ ar dudalen CThEF.
+Mae sgriniau a negeseuon ar-lein CThEF ar gael yn Gymraeg. Pan fydd DIY Accounting Submit yn eich anfon i CThEF i fewngofnodi, dewiswch ‘Cymraeg’ ar dudalen CThEF.
 
 Yn DIY Accounting Submit, gallwch weld adborth HMRC Assist ar eich Ffurflen TAW yn Gymraeg.
 
-Llinell gymorth Gymraeg CThEF ar gyfer Treth Incwm, Hunanasesiad, Yswiriant Gwladol a TWE:
-[0300 200 1900](tel:+443002001900). Ar gyfer TAW, tollau ac ecséis: [0300 200 3705](tel:+443002003705).
-Mae’r ddwy linell ar agor o ddydd Llun i ddydd Gwener, 8:30am i 5pm, ac ar gau ar wyliau banc.
+Llinell gymorth Gymraeg CThEF ar gyfer Treth Incwm, Hunanasesiad, Yswiriant Gwladol a TWE: [0300 200 1900](tel:+443002001900). Ar gyfer TAW, tollau ac ecséis: [0300 200 3705](tel:+443002003705). Mae’r ddwy linell ar agor o ddydd Llun i ddydd Gwener, 8:30am i 5pm, ac ar gau ar wyliau banc.
 
 [Llinellau cymorth Cymraeg CThEF ar GOV.UK](https://www.gov.uk/government/organisations/hm-revenue-customs/contact/welsh-language-helplines)
 

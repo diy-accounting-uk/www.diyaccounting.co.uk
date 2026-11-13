@@ -54,6 +54,15 @@ describe("llms-full.txt", () => {
   });
 });
 
+describe.each(["llms.txt", "llms-full.txt"])("%s", (file) => {
+  it("holds no HTML tag, script or comment", () => {
+    const text = read(file);
+    expect(text).not.toContain("<script");
+    expect(text).not.toContain("<!--");
+    expect(text).not.toMatch(/<\/?[a-z][^>]*>/i);
+  });
+});
+
 describe("pageMarkdown", () => {
   it("turns headings, links, list items and entities into Markdown", () => {
     const html =
