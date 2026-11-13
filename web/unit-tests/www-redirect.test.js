@@ -88,9 +88,26 @@ describe("old gateway paths that answered 403", () => {
     expect(res.headers.location.value).toBe("https://spreadsheets.diyaccounting.co.uk/knowledge-base.html");
   });
 
-  it("sends a feature path to the knowledge base", () => {
+  it.each([
+    ["BasicSoleTraderProduct", "basic-sole-trader"],
+    ["SelfEmployedProduct", "self-employed"],
+    ["CompanyAccountsProduct", "company"],
+    ["TaxiDriverProduct", "taxi-driver"],
+    ["PayslipProduct", "payslip-05"],
+  ])("sends a feature path for %s to its product page", (oldId, slug) => {
+    const res = run(apex, "/feature.html", { feature: { value: "TaxiReceiptsFeature" }, product: { value: oldId } });
+    expect(res.statusCode).toBe(301);
+    expect(res.headers.location.value).toBe(`https://spreadsheets.diyaccounting.co.uk/products/${slug}.html`);
+  });
+
+  it("sends a feature path with no product to the spreadsheets home page", () => {
     const res = run(apex, "/feature.html", { feature: { value: "TaxiReceiptsFeature" } });
-    expect(res.headers.location.value).toBe("https://spreadsheets.diyaccounting.co.uk/knowledge-base.html");
+    expect(res.headers.location.value).toBe("https://spreadsheets.diyaccounting.co.uk/");
+  });
+
+  it("sends a feature path with an unknown product to the spreadsheets home page", () => {
+    const res = run(apex, "/feature.html", { feature: { value: "TaxiReceiptsFeature" }, product: { value: "RetiredProduct" } });
+    expect(res.headers.location.value).toBe("https://spreadsheets.diyaccounting.co.uk/");
   });
 
   it("sends a known product id to its download page", () => {
