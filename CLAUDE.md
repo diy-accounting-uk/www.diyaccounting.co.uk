@@ -43,6 +43,15 @@ Skills live at `.claude/skills/<name>/SKILL.md`.
 
 - `.claude/skills/plain-prose/SKILL.md` — writing rules for plain, human prose; follow this for all human-facing text (docs, comments, chat)
 - `.claude/skills/do-next/SKILL.md` — dispatch `NEXT.md`'s open items as worktree-isolated sub-agents
+- `.claude/skills/orient-submit/SKILL.md` — read before working in `../submit.diyaccounting.co.uk`: the submission app, the board in `NEXT.md` and the `PLAN_*.md` files, the deploy and test rules; invoke as `/orient-submit`
+- `.claude/skills/orient-spreadsheets/SKILL.md` — read before working in `../spreadsheets.diyaccounting.co.uk`: the package pipeline, the reconciliation method, the `npm test` router and the pre-push hook, the `CONTEXT_*.md` product docs; invoke as `/orient-spreadsheets`
+- `.claude/skills/orient-root/SKILL.md` — read before working in `../root.diyaccounting.co.uk`: Route53 DNS, the holding page and the failover runbook; invoke as `/orient-root`
+- `.claude/skills/orient-archive/SKILL.md` — read before working in `../diy-accounting-archive`: the archived repository, which is history and not a place to develop; invoke as `/orient-archive`
+- `.claude/skills/orient-private/SKILL.md` — read before working in `../private.diyaccounting.co.uk`: the private documents repository, which has no CLAUDE.md of its own; invoke as `/orient-private`
+
+## Working in a sibling repository
+
+A session started here that works in another repository of this workspace invokes that repository's `orient-*` skill first, then follows the sibling's own `CLAUDE.md` and skills where they differ from this file. The skills are `orient-submit`, `orient-spreadsheets`, `orient-root`, `orient-archive`, `orient-private`.
 
 ## Git Workflow
 
@@ -137,7 +146,7 @@ Both workflows use OIDC authentication with these GitHub repository variables:
 
 **GitHub Environments**: `ci` and `prod` must exist in Settings > Environments, each with the above variables scoped to the correct account.
 
-**After deploying**: Copy the `CloudFrontDomainName` output and use it as input to `root.diyaccounting.co.uk` deploy workflow to update DNS alias records.
+**After deploying**: the DNS alias records are in the root repository; invoke `orient-root`.
 
 ## AWS CLI Access
 
