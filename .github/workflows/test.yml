@@ -119,7 +119,7 @@ jobs:
           NPM_CONFIG_FETCH_RETRIES: "3"
 
       - name: Run unit tests
-        run: npm run test:unit
+        run: npm test
 
   browser-test:
     runs-on: ubuntu-24.04

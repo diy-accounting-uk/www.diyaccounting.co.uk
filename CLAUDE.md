@@ -69,7 +69,6 @@ npm run lint:workflows         # Validate GitHub Actions workflow syntax (uses a
 npm run update-to-minor        # Update npm dependencies (minor versions)
 npm run update-to-latest       # Update npm dependencies (latest non-alpha)
 npm run update:java            # Update Maven dependencies to latest versions
-npm run update:node            # Update npm dependencies to latest non-alpha versions
 npm run resources:gateway      # Generate AWS_RESOURCES.md from live AWS data (requires SSO auth)
 ```
 
@@ -88,8 +87,7 @@ Behaviour tests use the `GATEWAY_BASE_URL` environment variable to target differ
 ## Compliance
 
 ```bash
-npm run compliance:ci-report-md    # Run all compliance checks and generate report (CI)
-npm run compliance:prod-report-md  # Run all compliance checks and generate report (prod)
+ENVIRONMENT_NAME=ci npm run compliance:report-md    # Run all compliance checks and generate report (ci or prod)
 ```
 
 The compliance report (`REPORT_ACCESSIBILITY_PENETRATION.md`) combines accessibility checks (pa11y, axe-core, Lighthouse, WCAG text spacing) with security checks (ESLint security, npm audit, retire.js). Generated files are gitignored.
@@ -167,12 +165,7 @@ See the shared conventions section at the end of this file for shared rules. Gat
 
 ## Template Repository
 
-This repo is designed as the **simplest CDK static site template**. See `TEMPLATE.md` for full instructions. Key scripts:
-
-- `scripts/template-clean.sh` — strips DIY-specific content, replaces with placeholders
-- `scripts/template-init.sh` — interactive, applies your domain/company/account values
-
-**NEVER run `template-clean.sh` without asking the user first.** It destructively replaces site-specific content.
+This repo is designed as the **simplest CDK static site template**. See `TEMPLATE.md` for full instructions.
 
 ## Security Checklist
 

@@ -28,45 +28,7 @@ git clone git@github.com:myorg/www.mysite.example.git
 cd www.mysite.example
 ```
 
-### Step 2: Strip DIY Accounting-specific Content
-
-```bash
-./scripts/template-clean.sh
-```
-
-This replaces all company-specific content (domain, company name, addresses, analytics IDs, redirects) with RFC 2606 placeholder values (`site.example`, `Example Company`).
-
-### Step 3: Apply Your Values
-
-```bash
-./scripts/template-init.sh
-```
-
-Interactive prompts for:
-
-| Prompt | Example | What it changes |
-|--------|---------|-----------------|
-| Domain name | `spreadsheets.example.com` | HTML, CDK context, workflows, sitemap |
-| Company name | `Acme Corp Ltd` | HTML, JSON-LD, SPDX headers |
-| GitHub owner | `acmecorp` | package.json scope, workflow repo references |
-| AWS account ID | `064390746177` | CDK context, tags |
-| Java package | `com.example.spreadsheets` | Directory structure, imports, pom.xml |
-| CDK prefix | `spreadsheets` | Stack names, resource prefixes, directory names |
-| Copyright year | `2026` | SPDX headers |
-
-For CI/CD automation, use `--non-interactive` mode with environment variables:
-
-```bash
-TEMPLATE_DOMAIN=spreadsheets.example.com \
-TEMPLATE_COMPANY="Acme Corp Ltd" \
-TEMPLATE_GITHUB_OWNER=acmecorp \
-TEMPLATE_AWS_ACCOUNT_ID=064390746177 \
-TEMPLATE_JAVA_PACKAGE=com.example.spreadsheets \
-TEMPLATE_CDK_PREFIX=spreadsheets \
-./scripts/template-init.sh --non-interactive
-```
-
-### Step 4: Set GitHub Repository Variables
+### Step 2: Set GitHub Repository Variables
 
 In Settings > Secrets and variables > Actions > Variables:
 
@@ -78,7 +40,7 @@ In Settings > Secrets and variables > Actions > Variables:
 
 Create two **environments** in Settings > Environments: `ci` and `prod`.
 
-### Step 5: Replace Web Content
+### Step 3: Replace Web Content
 
 Edit the files in `web/www.{yourdomain}/public/`:
 
@@ -90,7 +52,7 @@ Edit the files in `web/www.{yourdomain}/public/`:
 - `.well-known/security.txt` — update contact and expiry
 - `lib/analytics.js` — your GA4 measurement ID (or remove)
 
-### Step 6: Build and Deploy
+### Step 4: Build and Deploy
 
 ```bash
 npm install
@@ -100,7 +62,7 @@ git add -A && git commit -m "Initialise from template"
 git push -u origin main     # Triggers deploy.yml
 ```
 
-### Step 7: Configure DNS
+### Step 5: Configure DNS
 
 After the first deployment, copy the `CloudFrontDomainName` output from the deploy workflow and create a DNS alias (CNAME or Route53 alias) pointing your domain to it.
 
@@ -113,7 +75,7 @@ After the first deployment, copy the `CloudFrontDomainName` output from the depl
 | **CI/CD** | GitHub Actions with OIDC auth, test on push/PR, deploy on main |
 | **Testing** | Unit tests (vitest), browser tests (Playwright), behaviour tests, smoke tests |
 | **Compliance** | Pa11y, axe-core, Lighthouse, text spacing (WCAG), ESLint security, npm audit, retire.js |
-| **Reporting** | `npm run compliance:ci-report-md` generates full compliance report |
+| **Reporting** | `ENVIRONMENT_NAME=ci npm run compliance:report-md` generates full compliance report |
 | **Formatting** | Spotless (Java) + Prettier (JS/YAML/JSON), enforced in CI |
 
 ## Appendix: Bootstrapping a New AWS Account
