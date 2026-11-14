@@ -40,7 +40,7 @@ web/www.diyaccounting.co.uk/
 | `npm test` | Unit tests — SEO validation + smoke tests |
 | `npm run test:browser` | Browser tests — HTML content validation (Playwright) |
 | `npm run test:gatewayBehaviour-local` | Behaviour tests against local server |
-| `npm run compliance:ci-report-md` | Full compliance report (accessibility + security) |
+| `ENVIRONMENT_NAME=ci npm run compliance:report-md` | Full compliance report (accessibility + security) |
 
 Start the local dev server with `npm start` (serves on port 3000).
 
@@ -61,7 +61,6 @@ OIDC authentication with `gateway-github-actions-role` and `gateway-deployment-r
 | `npm run lint:workflows` | Validate GitHub Actions workflows |
 | `npm run resources:gateway` | Generate AWS resource catalogue |
 | `npm run update:java` | Update Maven dependencies |
-| `npm run update:node` | Update npm dependencies |
 
 ## Template Repository
 

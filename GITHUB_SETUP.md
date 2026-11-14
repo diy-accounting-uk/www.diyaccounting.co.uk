@@ -68,7 +68,7 @@ None required. All authentication is via OIDC; no third-party tokens are used du
 
 ## Template repository note
 
-This repo is also designed as a generic CDK static-site template (see `TEMPLATE.md`). `scripts/template-clean.sh` strips DIY Accounting-specific content and replaces it with placeholders. **NEVER run `template-clean.sh` without confirming first** — it destructively modifies files. It's only meant to be run on a fresh fork intended for template use.
+This repo is also designed as a generic CDK static-site template (see `TEMPLATE.md`).
 
 ## How to obtain values quickly
 
