@@ -2,7 +2,7 @@
 
 Source: https://diyaccounting.co.uk/
 
-- [DIY Accounting Submit: Submit UK VAT returns, company accounts and confirmation statements](https://submit.diyaccounting.co.uk/)
+- [DIY Accounting Submit: Submit UK VAT returns to HMRC under Making Tax Digital (MTD), and company accounts and confirmation statements to Companies House](https://submit.diyaccounting.co.uk/)
 - [DIY Accounting Spreadsheets: Excel bookkeeping and accounting software for UK small businesses](https://spreadsheets.diyaccounting.co.uk/)
 - [DIYA-GL: Your books, free in the browser](https://diya-gl.co.uk/)
 - [Marketing resources: Brand guides and shareable posts for each DIY Accounting product](https://marketing.diyaccounting.co.uk/)
@@ -17,7 +17,7 @@ Our products are designed to be straightforward and practical, giving small busi
 
 Source: https://diyaccounting.co.uk/cy/index.html
 
-- [DIY Accounting Submit: Cyflwyno Ffurflenni TAW y DU, cyfrifon cwmni a datganiadau cadarnhau](https://submit.diyaccounting.co.uk/cy/get-started.html)
+- [DIY Accounting Submit: Cyflwyno Ffurflenni TAW i CThEF drwy Troi Treth yn Ddigidol, a chyfrifon cwmni a datganiadau cadarnhau i Dŷ’r Cwmnïau](https://submit.diyaccounting.co.uk/cy/get-started.html)
 - [DIY Accounting Spreadsheets: Taenlenni Excel ar gyfer cadw cyfrifon a chyfrifyddu i fusnesau bach yn y DU](https://spreadsheets.diyaccounting.co.uk/)
 - [DIYA-GL: Eich cyfrifon, am ddim yn y porwr](https://diya-gl.co.uk/)
 - [Adnoddau marchnata: Canllawiau brand a negeseuon i’w rhannu ar gyfer pob un o gynhyrchion DIY Accounting](https://marketing.diyaccounting.co.uk/)
