@@ -88,8 +88,8 @@ hash = "4bdf8942e89d"
 cy = '''DIY Accounting - Meddalwedd cyfrifyddu i fusnesau bach yn y DU'''
 
 [strings."index.description"]
-hash = "0b42d32e635d"
-cy = '''Mae DIY Accounting yn darparu meddalwedd cyfrifyddu i fusnesau bach yn y DU. Cyflwynwch Ffurflenni TAW i CThEF drwy’r cynllun Troi Treth yn Ddigidol, neu defnyddiwch ein taenlenni Excel ar gyfer cadw cyfrifon.'''
+hash = "132d25e5fb36"
+cy = '''Mae DIY Accounting yn darparu meddalwedd cyfrifyddu i fusnesau bach yn y DU. Cyflwynwch Ffurflenni TAW, cyfrifon cwmni a datganiadau cadarnhau, neu defnyddiwch ein taenlenni Excel ar gyfer cadw cyfrifon.'''
 
 [strings."index.products-label"]
 hash = "4edc8bfafc6b"
@@ -100,8 +100,8 @@ hash = "a9453adfbb5d"
 cy = '''https://submit.diyaccounting.co.uk/cy/get-started.html'''
 
 [strings."index.submit-subtitle"]
-hash = "863e14503f49"
-cy = '''Cyflwyno Ffurflenni TAW y DU i CThEF drwy’r cynllun Troi Treth yn Ddigidol'''
+hash = "2367413c70e1"
+cy = '''Cyflwyno Ffurflenni TAW y DU, cyfrifon cwmni a datganiadau cadarnhau'''
 
 [strings."index.spreadsheets-subtitle"]
 hash = "53da3227911c"
